@@ -68,7 +68,6 @@ namespace BL.Data
             if (entity == null)
             {
                 entity = new ODataEntity(this, typeName);
-                entity.Name = typeName;
             }
             return null;
         }
