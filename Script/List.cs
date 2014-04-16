@@ -14,6 +14,32 @@ namespace BL.Data
         private Dictionary<String, IDataStoreField> fieldsByName;
         private List<IItem> allItems;
 
+        private String keyFieldId;
+
+        public String KeyFieldId
+        {
+            get
+            {
+                return this.keyFieldId;
+            }
+        }
+
+
+        public IDataStore store;
+
+        public IDataStore Store
+        {
+            get
+            {
+                return this.store;
+            }
+
+            set
+            {
+                this.store = value;
+            }
+        }
+        
         public ICollection<IDataStoreField> Fields 
         {
             get

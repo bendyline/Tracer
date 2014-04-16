@@ -9,12 +9,19 @@ namespace BL.Data
     public abstract class Item : IItem
     {
         private Dictionary<String, object> data;
-        private IDataStoreType list;
         private ItemStatus status;
         
         public event DataStoreItemEventHandler ItemChanged;
 
         public abstract String Id { get;  }
+
+        private IDataStoreType parentType;
+
+        public IDataStoreType Type
+        {
+            get { return this.parentType; }
+            set { this.parentType = value; }
+        }
 
         public ItemStatus Status
         {
@@ -35,7 +42,7 @@ namespace BL.Data
 
         public Item(IDataStoreType list)
         {
-            this.list = list;
+            this.parentType = list;
             this.data = new Dictionary<string, object>();
         }
 
@@ -87,7 +94,6 @@ namespace BL.Data
                 this.ItemChanged(this, dsiea);
             }
         }
-
 
         public String GetStringValue(String name)
         {

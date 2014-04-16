@@ -16,12 +16,13 @@
     <GenerateResources>True</GenerateResources>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <OutputPath>..\..\web\gs\Dacer\dbg\</OutputPath>
+    <OutputPath>..\..\web\gs\Tracer\dbg\</OutputPath>
     <DefineConstants>DEBUG;CODE_ANALYSIS;SCRIPTSHARP</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <NoWarn>0028, 1591, 1684</NoWarn>
-    <DocumentationFile>..\..\web\gs\Dacer\dbg\bl.data.xml</DocumentationFile>
+    <DocumentationFile>
+    </DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <OutputPath>..\..\web\gs\tracer\1.0\</OutputPath>
@@ -33,11 +34,14 @@
     </DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="FieldChoiceCollection.cs" />
+    <Compile Include="FieldChoice.cs" />
     <Compile Include="Item.cs" />
     <Compile Include="Native\OData.cs" />
     <Compile Include="Native\ODataCallbacks.cs" />
     <Compile Include="Native\ODataRequest.cs" />
     <Compile Include="ODataEntity.cs" />
+    <Compile Include="ODataEntityType.cs" />
     <Compile Include="ODataItemSet.cs" />
     <Compile Include="ODataStore.cs" />
     <Compile Include="SyncItemFile.cs" />

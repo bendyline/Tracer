@@ -6,6 +6,11 @@ namespace BL.Data
 {
     public interface IDataStoreItemSet
     {
+        IItem FirstItem
+        {
+            get;
+        }
+
         List<IItem> Items
         {
             get;
@@ -25,6 +30,5 @@ namespace BL.Data
 
         IItem GetItemById(String id);
         void BeginRetrieve(AsyncCallback callback, object state);
-        ICollection<IItem> EndRetrieve(IAsyncResult result);
     }
 }

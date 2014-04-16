@@ -12,6 +12,13 @@ namespace BL.Data
         private IDataStoreType list;
         private Query query;
 
+        public IItem FirstItem
+        {
+            get
+            {
+                return this.Items[0];
+            }
+        }
         public abstract List<IItem> Items { get; }
 
         public event DataStoreItemSetEventHandler ItemSetChanged;

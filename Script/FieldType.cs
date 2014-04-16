@@ -9,6 +9,7 @@ namespace BL.Data
     {
         Text = 0,
         Note = 1,
-        Integer = 2
+        Integer = 2,
+        Enumeration = 3
     }
 }

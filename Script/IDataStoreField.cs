@@ -7,6 +7,8 @@ namespace BL.Data
 {
     public interface IDataStoreField
     {
+        FieldChoiceCollection Choices { get;  }
+        String DisplayName { get; }
         String Name { get; }
         FieldType Type { get; }
     }

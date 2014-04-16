@@ -10,15 +10,17 @@ namespace BL.Data
     {
         private String location;
         private String name;
-        private List<IDataStoreType> entities;
-        private Dictionary<String, ODataEntity> entitiesByName;
+        private List<IDataStoreType> entityTypes;
+        private Dictionary<String, ODataEntityType> entitiesTypesByName;
         private bool requiresAuthentication;
-        
+        private Int32 newItemsCreated;
+        private String serviceUrl;
+        private String storeNamespace;
         public ICollection<IDataStoreType> Types 
         {
             get
             {
-                return this.entities;
+                return this.entityTypes;
             }        
         }
 
@@ -43,6 +45,43 @@ namespace BL.Data
             }
         }
 
+        public String Namespace
+        {
+            get
+            {
+                return this.storeNamespace;
+            }
+            set
+            {
+                this.storeNamespace = value;
+            }
+        }
+
+        public String ServiceUrl
+        {
+            get
+            {
+                return this.serviceUrl;
+            }
+            set
+            {
+                this.serviceUrl = value;
+            }
+        }
+
+        public int NewItemsCreated
+        {
+            get
+            {
+                return this.newItemsCreated;
+            }
+
+            set
+            {
+                this.newItemsCreated = value;
+            }
+        }
+
         public bool RequiresAuthentication 
         {
             get
@@ -57,19 +96,30 @@ namespace BL.Data
 
         public ODataStore()
         {
-            this.entities = new List<IDataStoreType>();
-            this.entitiesByName = new Dictionary<string, ODataEntity>();
+            this.entityTypes = new List<IDataStoreType>();
+            this.entitiesTypesByName = new Dictionary<string, ODataEntityType>();
         }
 
         public IDataStoreType Type(String typeName)
         {
-            ODataEntity entity = this.entitiesByName[typeName];
+            ODataEntityType entity = this.entitiesTypesByName[typeName];
 
             if (entity == null)
             {
-                entity = new ODataEntity(this, typeName);
+                entity = new ODataEntityType(this, typeName);
+                this.entitiesTypesByName[typeName] = entity;
+                this.entityTypes.Add(entity);
             }
-            return null;
+
+            return entity;
+        }
+
+        public void Save()
+        {
+            foreach (ODataEntityType e in this.entityTypes)
+            {
+                e.Save();
+            }
         }
     }
 }

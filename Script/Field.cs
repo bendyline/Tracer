@@ -10,7 +10,40 @@ namespace BL.Data
     public class Field : IDataStoreField
     {
         private String name;
+        private String displayName;
         private FieldType fieldType;
+        private FieldChoiceCollection fieldChoices;
+
+        public FieldChoiceCollection Choices
+        {
+            get
+            {
+                if (this.fieldChoices == null)
+                {
+                    this.fieldChoices = new FieldChoiceCollection();
+                }
+
+                return this.fieldChoices;
+
+            }
+        }
+        public String DisplayName
+        {
+            get
+            {
+                if (this.displayName == null)
+                {
+                    return this.name;
+                }
+
+                return this.displayName;
+            }
+
+            set
+            {
+                this.displayName = value;
+            }
+        }
 
         public String Name
         {

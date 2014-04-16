@@ -1,122 +1,144 @@
-/* Copyright (c) Bendyline LLC. All rights reserved. Licensed under the Apache License, Version 2.0.
+﻿/* Copyright (c) Bendyline LLC. All rights reserved. Licensed under the Apache License, Version 2.0.
     You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0. */
 
 using System;
 using System.Collections.Generic;
+using System.Net;
+using System.Serialization;
 
 namespace BL.Data
 {
-    public class ODataEntity : IDataStoreType
+    public class ODataEntity : Item
     {
-        private List<IDataStoreField> fields;
-        private Dictionary<String, Field> fieldsByName;
-        private List<IItem> items;
-        private String name;
-        private Dictionary<String, ODataItemSet> itemsByQuery;
-        private ODataItemSet allItemsSet;
-        private ODataStore store;
+        private string id;
+        private XmlHttpRequest saveRequest;
 
-        public ICollection<IDataStoreField> Fields 
+        public event EventHandler Saved;
+        public override String Id
         {
             get
             {
-                return this.fields;
+                return this.id;
             }
+
         }
 
-        public ICollection<IItem> AllLocalItems 
+        public ODataStore Store
         {
             get
             {
-                return this.items;
-            }     
-        }
-
-        public String Name 
-        {
-            get
-            {
-                return this.name;
+                return (ODataStore)this.Type.Store;
             }
         }
 
-        public ODataEntity(ODataStore store, String name)
+        public ODataEntity(ODataEntityType entityType) : base(entityType)
         {
-            this.name = name;
-            this.store = store;
-            this.fieldsByName = new Dictionary<string, Field>();
-            this.itemsByQuery = new Dictionary<string, ODataItemSet>();
-            this.fields = new List<IDataStoreField>();
+            
         }
 
-        public IDataStoreField AssumeField(String name, FieldType fieldType)
+        public void SetId(String id)
         {
-            Field f = (Field)this.GetField(name);
+            this.id = id;
+        }
 
-            if (f == null)
+        private String GetJson()
+        {
+            StringBuilder result = new StringBuilder();
+
+
+            result.Append("{");
+            result.Append(" \"odata.type\":\"" + this.Store.Namespace + "." + this.Type.Name + "\"");
+         
+            foreach (Field f in this.Type.Fields)
             {
-                f = new Field(name, fieldType);
-
-                this.fieldsByName[name] = f;
-                this.fields.Add(f);
+                if (f.Name != "Id")
+                {
+                    if (f.Type == FieldType.Integer)
+                    {
+                        result.Append(",\"" + f.Name + "\":" + this.GetStringValue(f.Name));
+                    }
+                    else
+                    {
+                        result.Append(",\"" + f.Name + "\":\"" + JsonEncode(this.GetStringValue(f.Name)) + "\"");
+                    }
+                }
             }
 
-            return f;
+            result.Append("}");
+
+            return result.ToString();
         }
 
-        public IDataStoreField GetField(String fieldName)
+        private String JsonEncode(String value)
         {
-            return this.fieldsByName[fieldName];
-        }
-
-        public IItem CreateItem()
-        {
-            return null;
-        }
-
-        public IDataStoreItemSet EnsureAllItemsSet()
-        {
-            if (this.allItemsSet != null)
+            if (value == null)
             {
-                return this.allItemsSet;
+                return null;
             }
 
-            String queryString = "";
+            value = value.Replace("\"", "\\\"");
 
-            ODataItemSet odis = this.itemsByQuery[queryString];
+            return value;
+        }
+       
 
-            if (odis == null)
+        public void Save()
+        {
+            if (this.Status == ItemStatus.Unchanged)
             {
-                odis = new ODataItemSet(this, Query.All);
-
-                this.itemsByQuery[queryString] = odis;
+                return;
             }
 
+            String endpoint = ((ODataEntityType)this.Type).Url;
 
-            this.allItemsSet = odis;
-            return odis;
+            String json = GetJson();
+
+            XmlHttpRequest xhr = new XmlHttpRequest();
+
+            xhr.Open("POST", endpoint);
+            xhr.SetRequestHeader("Accept", "application/json;odata=minimalmetadata");
+            xhr.SetRequestHeader("Content-Type", "application/json;odata=minimalmetadata");
+         //   xhr.SetRequestHeader("DataServiceVersion", "DataServiceVersion: 3.0;NetFx");
+            xhr.Send(json);
+            xhr.OnReadyStateChange = new Action(this.HandleSaveComplete);
+
+            this.saveRequest = xhr;
+
         }
 
-        public IDataStoreItemSet EnsureItemSet(Query query)
+        private void HandleSaveComplete()
         {
-            String queryString = query.ToString().ToLowerCase();
-
-            ODataItemSet odis = this.itemsByQuery[queryString];
-
-            if (odis == null)
+            if (this.saveRequest != null && this.saveRequest.ReadyState == ReadyState.Loaded)
             {
-                odis =new ODataItemSet(this, query);
+                this.SetStatus(ItemStatus.Unchanged);
+                
+                String responseContent = this.saveRequest.ResponseText;
 
-                this.itemsByQuery[queryString] = odis;
+                object results = Json.Parse(responseContent);
+
+                Script.Literal(@"
+                    var oc = {0};
+                    var fieldarr = {1};
+
+                        for (var j=0; j<fieldarr.length; j++)
+                        {{
+                            var fi = fieldarr[j];
+                            var fiName = fi.get_name();
+
+                            var val = oc[fi.get_name()];
+
+                            if (val != null)
+                            {{
+                                this.setValue(fiName, val);
+                            }}
+                        }}
+", results, this.Type.Fields);
+
+                if (this.Saved != null)
+                {
+                    this.Saved(this, EventArgs.Empty);
+                }
             }
-
-            return null;
         }
-
-        public void BeginUpdate(AsyncCallback callback, object asyncState)
-        {
-            ;
-        }
-
     }
 }
