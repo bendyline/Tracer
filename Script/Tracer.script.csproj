@@ -36,12 +36,14 @@
   <ItemGroup>
     <Compile Include="FieldChoiceCollection.cs" />
     <Compile Include="FieldChoice.cs" />
+    <Compile Include="StandaloneItem.cs" />
     <Compile Include="Item.cs" />
     <Compile Include="Native\OData.cs" />
     <Compile Include="Native\ODataCallbacks.cs" />
     <Compile Include="Native\ODataRequest.cs" />
     <Compile Include="ODataEntity.cs" />
     <Compile Include="ODataEntityType.cs" />
+    <Compile Include="StandaloneItemSet.cs" />
     <Compile Include="ODataItemSet.cs" />
     <Compile Include="ODataStore.cs" />
     <Compile Include="SyncItemFile.cs" />

@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace BL.Data
 {
-    public class FieldChoice 
+    public class FieldChoice : SerializableObject
     {
         private String displayName;
         private String id;

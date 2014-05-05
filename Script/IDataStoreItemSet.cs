@@ -29,6 +29,9 @@ namespace BL.Data
         event DataStoreItemSetEventHandler ItemSetChanged;
 
         IItem GetItemById(String id);
+
         void BeginRetrieve(AsyncCallback callback, object state);
+
+        void Add(IItem item);
     }
 }

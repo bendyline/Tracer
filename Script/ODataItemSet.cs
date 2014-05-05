@@ -11,7 +11,7 @@ namespace BL.Data
     public class ODataItemSet : IDataStoreItemSet
     {
         private List<IItem> items;
-        private Dictionary<String, Item> itemsById;
+        private Dictionary<String, IItem> itemsById;
 
         private ODataEntityType entity;
         private Query query;
@@ -56,7 +56,7 @@ namespace BL.Data
         {
             this.entity = (ODataEntityType)list;
             this.query = query;
-            this.itemsById = new Dictionary<string, Item>();
+            this.itemsById = new Dictionary<string, IItem>();
             this.items = new List<IItem>();
         }
 
@@ -79,12 +79,6 @@ namespace BL.Data
             return item;
         }
 
-        public void AddItem(ODataEntity entity)
-        {
-            this.items.Add(entity);
-            this.itemsById[entity.Id] = entity;
-
-        }
         public IItem GetItemById(String id)
         {
             return this.itemsById[id];
@@ -104,7 +98,7 @@ namespace BL.Data
 
                     if (field != null)
                     {
-                        if (field.Type == FieldType.Integer)
+                        if (field.Type == FieldType.Integer || field.Type == FieldType.BigInteger)
                         {
                             filter.Append(fieldName + " eq " + ((EqualsClause)clause).Value + "");
                         }
@@ -119,6 +113,34 @@ namespace BL.Data
             String filterStr = "$filter=" + filter.ToString();
 
             return filterStr;
+        }
+
+        public virtual void Add(IItem item)
+        {
+            IItem existingItem = this.itemsById[item.Id];
+
+            if (existingItem != null && existingItem != item)
+            {
+                throw new Exception("Adding two items representing the same ID.");
+            }
+
+            if (existingItem != null && existingItem == item)
+            {
+                return;
+            }
+
+            this.itemsById[item.Id] = item;
+            this.Items.Add(item);
+
+
+            if (this.ItemSetChanged != null)
+            {
+                DataStoreItemSetEventArgs dsiea = new DataStoreItemSetEventArgs(this);
+
+                dsiea.AddedItems.Add(item);
+
+                this.ItemSetChanged(this, dsiea);
+            }
         }
 
         public void BeginRetrieve(AsyncCallback callback, object state)
@@ -187,7 +209,7 @@ namespace BL.Data
                             }}
                         }}
 
-this.addItem(newe);
+this.add(newe);
                     }}
                     
 ", results, this.entity.Fields);

@@ -51,6 +51,26 @@ namespace BL.Data
             this.data = (Dictionary<String, object>)data;
         }
 
+        public Int32 GetInt32Value(String name)
+        {
+            if (!this.data.ContainsKey(name))
+            {
+                return 0;
+            }
+
+            return Int32.Parse((String)this.data[name]);
+        }
+
+        public Int64 GetInt64Value(String name)
+        {
+            if (!this.data.ContainsKey(name))
+            {
+                return 0;
+            }
+
+            return (Int64)Number.ParseInt((String)this.data[name]);
+        }
+
         public object GetValue(String name)
         {
             if (!this.data.ContainsKey(name))
@@ -102,7 +122,14 @@ namespace BL.Data
                 return null;
             }
 
-            return (String)this.data[name];
+            object val = this.data[name];
+
+            if (val == null)
+            {
+                return null;
+            }
+
+            return val.ToString();
         }
 
         public void SetStringValue(String name, String value)

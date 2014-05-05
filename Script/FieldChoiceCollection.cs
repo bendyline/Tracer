@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace BL.Data
 {
-    public class FieldChoiceCollection
+    public class FieldChoiceCollection : ISerializableCollection, IEnumerable
     {
         private ArrayList choices;
         private Dictionary<String, FieldChoice> choicesById;
@@ -51,17 +51,17 @@ namespace BL.Data
             this.choicesById.Clear();
         }
 
-        public FieldChoice Create()
+        public SerializableObject Create()
         {
-            FieldChoice sens = new FieldChoice();
+            FieldChoice choice = new FieldChoice();
 
-            return sens;
+            return choice;
         }
 
-        public void Add(FieldChoice template)
+        public void Add(SerializableObject choice)
         {
-            this.choices.Add(template);
-            this.choicesById[((FieldChoice)template).Id] = (FieldChoice)template;
+            this.choices.Add(choice);
+            this.choicesById[((FieldChoice)choice).Id] = (FieldChoice)choice;
         }
     }
 }

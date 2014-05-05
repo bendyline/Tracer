@@ -119,6 +119,15 @@ namespace BL.Data
             return itemSet.Create();
         }
 
+        public IItem CreateDisconnectedItem()
+        {
+            ODataEntity item = new ODataEntity(this);
+
+            item.Disconnected = true;
+
+            return item;
+        }
+
         public void Save()
         {
             foreach (ODataEntity ode in this.allItemsSet.Items)
@@ -154,7 +163,7 @@ namespace BL.Data
         {
             String queryString = query.ToString().ToLowerCase();
 
-            ODataItemSet odis = null;// this.itemsByQuery[queryString];
+            ODataItemSet odis = null;
 
             if (odis == null)
             {

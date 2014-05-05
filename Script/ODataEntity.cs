@@ -1,6 +1,7 @@
 ﻿/* Copyright (c) Bendyline LLC. All rights reserved. Licensed under the Apache License, Version 2.0.
     You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0. */
 
+using Bendyline.Base;
 using System;
 using System.Collections.Generic;
 using System.Net;
@@ -11,16 +12,34 @@ namespace BL.Data
     public class ODataEntity : Item
     {
         private string id;
+        private bool disconnected = false;
         private XmlHttpRequest saveRequest;
 
         public event EventHandler Saved;
+
+        public bool Disconnected
+        {
+            get
+            {
+                return this.disconnected;
+            }
+
+            set
+            {
+                this.disconnected = value;
+            }
+        }
         public override String Id
         {
             get
             {
+                if (this.id == null)
+                {
+                    this.id = this.GetValueAsString("Id");
+                }
+
                 return this.id;
             }
-
         }
 
         public ODataStore Store
@@ -45,7 +64,6 @@ namespace BL.Data
         {
             StringBuilder result = new StringBuilder();
 
-
             result.Append("{");
             result.Append(" \"odata.type\":\"" + this.Store.Namespace + "." + this.Type.Name + "\"");
          
@@ -59,7 +77,7 @@ namespace BL.Data
                     }
                     else
                     {
-                        result.Append(",\"" + f.Name + "\":\"" + JsonEncode(this.GetStringValue(f.Name)) + "\"");
+                        result.Append(",\"" + f.Name + "\":\"" + JsonUtilities.Encode(this.GetStringValue(f.Name)) + "\"");
                     }
                 }
             }
@@ -69,21 +87,13 @@ namespace BL.Data
             return result.ToString();
         }
 
-        private String JsonEncode(String value)
-        {
-            if (value == null)
-            {
-                return null;
-            }
-
-            value = value.Replace("\"", "\\\"");
-
-            return value;
-        }
-       
-
         public void Save()
         {
+            if (this.disconnected)
+            {
+                throw new Exception("Cannot save a disconnected item.");
+            }
+
             if (this.Status == ItemStatus.Unchanged)
             {
                 return;
@@ -103,7 +113,6 @@ namespace BL.Data
             xhr.OnReadyStateChange = new Action(this.HandleSaveComplete);
 
             this.saveRequest = xhr;
-
         }
 
         private void HandleSaveComplete()

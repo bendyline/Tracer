@@ -48,5 +48,13 @@ namespace BL.Data
         public abstract IItem GetItemById(String id);
         public abstract void BeginRetrieve(AsyncCallback callback, object state);
         public abstract ICollection<IItem> EndRetrieve(IAsyncResult result);
+
+        public virtual void Add(IItem item)
+        {
+            if (!this.Items.Contains(item))
+            {
+                this.Items.Add(item);
+            }
+        }
     }
 }

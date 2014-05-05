@@ -10,6 +10,8 @@ namespace BL.Data
         Text = 0,
         Note = 1,
         Integer = 2,
-        Enumeration = 3
+        Enumeration = 3,
+        BigInteger = 4,
+        DateTime = 5
     }
 }
