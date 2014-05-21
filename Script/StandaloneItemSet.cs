@@ -101,12 +101,18 @@ namespace BL.Data
 
         public void BeginRetrieve(AsyncCallback callback, object state)
         {
-            throw new Exception("Not implemented");
-        }
+           if (callback != null)
+           {
+               CallbackResult cr = new CallbackResult();
 
-        public ICollection<IItem> EndRetrieve(IAsyncResult result)
-        {
-            throw new Exception("Not implemented");
+               cr.AsyncState = state;
+               cr.Data = this;
+               cr.IsCompleted = true;
+               cr.CompletedSynchronously = true;
+
+               callback(cr);
+           }
         }
+        
     }
 }

@@ -11,6 +11,20 @@ namespace BL.Data
     {
         private int rowLimit = 1000;
         private static Query allQuery = new Query();
+        private String source;
+
+        public String Source
+        {
+            get
+            {
+                return this.source;
+            }
+
+            set
+            {
+                this.source = value;
+            }
+        }
 
         public int RowLimit
         {
@@ -33,5 +47,16 @@ namespace BL.Data
             }
         }
 
+        public override string ToString()
+        {
+            if (this.source == null)
+            {
+                return base.ToString();
+            }
+            else
+            {
+                return this.source + "|" + base.ToString();
+            }
+        }
     }
 }

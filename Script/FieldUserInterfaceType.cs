@@ -5,12 +5,11 @@ using System;
 
 namespace BL.Data
 {
-    public interface IDataStoreField
+    public enum FieldUserInterfaceType
     {
-        FieldChoiceCollection Choices { get;  }
-        String DisplayName { get; }
-        String Name { get; }
-        FieldType Type { get; }
-        FieldUserInterfaceType UserInterfaceType { get; }
+        TypeDefault = 0,
+        User = 1,
+        Choice = 2,
+        Scale = 3
     }
 }

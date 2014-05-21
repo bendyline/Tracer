@@ -16,6 +16,7 @@ namespace BL.Data
         private XmlHttpRequest saveRequest;
 
         public event EventHandler Saved;
+        private Operation saveOperation;
 
         public bool Disconnected
         {
@@ -29,6 +30,25 @@ namespace BL.Data
                 this.disconnected = value;
             }
         }
+
+        public Operation SaveOperation
+        {
+            get
+            {
+                if (this.saveOperation == null)
+                {
+                    this.saveOperation = new Operation();
+                }
+
+                return this.saveOperation;
+            }
+
+            set
+            {
+                this.saveOperation = value;
+            }
+        }
+
         public override String Id
         {
             get
@@ -71,13 +91,18 @@ namespace BL.Data
             {
                 if (f.Name != "Id")
                 {
-                    if (f.Type == FieldType.Integer)
+                    String value = this.GetStringValue(f.Name);
+
+                    if (value != null)
                     {
-                        result.Append(",\"" + f.Name + "\":" + this.GetStringValue(f.Name));
-                    }
-                    else
-                    {
-                        result.Append(",\"" + f.Name + "\":\"" + JsonUtilities.Encode(this.GetStringValue(f.Name)) + "\"");
+                        if (f.Type == FieldType.Integer)
+                        {
+                            result.Append(",\"" + f.Name + "\":" + value);
+                        }
+                        else
+                        {
+                            result.Append(",\"" + f.Name + "\":\"" + JsonUtilities.Encode(value) + "\"");
+                        }
                     }
                 }
             }
@@ -87,14 +112,39 @@ namespace BL.Data
             return result.ToString();
         }
 
-        public void Save()
+        public void Save(AsyncCallback callback, object state)
         {
             if (this.disconnected)
             {
                 throw new Exception("Cannot save a disconnected item.");
             }
 
+            bool isNew = false;
+
             if (this.Status == ItemStatus.Unchanged)
+            {
+                if (callback != null)
+                {
+                    CallbackResult cr = new CallbackResult();
+                    cr.AsyncState = state;
+                    cr.Data = this;
+                    cr.CompletedSynchronously = true;
+
+                    callback(cr);
+                }
+
+                return;
+            }
+
+            if (this.saveOperation == null)
+            {
+                this.saveOperation = new Operation();
+                isNew = true;
+            }
+
+            this.saveOperation.AddCallback(callback, state);
+
+            if (!isNew)
             {
                 return;
             }
@@ -105,10 +155,17 @@ namespace BL.Data
 
             XmlHttpRequest xhr = new XmlHttpRequest();
 
-            xhr.Open("POST", endpoint);
+            if (this.Status == ItemStatus.Update)
+            {
+                xhr.Open("PUT", endpoint + "(" + this.Id + "L)");
+            }
+            else
+            {
+                xhr.Open("POST", endpoint);
+            }
             xhr.SetRequestHeader("Accept", "application/json;odata=minimalmetadata");
-            xhr.SetRequestHeader("Content-Type", "application/json;odata=minimalmetadata");
-         //   xhr.SetRequestHeader("DataServiceVersion", "DataServiceVersion: 3.0;NetFx");
+            xhr.SetRequestHeader("Content-Type", "application/json");
+//            xhr.SetRequestHeader("DataServiceVersion", "DataServiceVersion: 3.0;NetFx");
             xhr.Send(json);
             xhr.OnReadyStateChange = new Action(this.HandleSaveComplete);
 
@@ -122,6 +179,11 @@ namespace BL.Data
                 this.SetStatus(ItemStatus.Unchanged);
                 
                 String responseContent = this.saveRequest.ResponseText;
+
+                if (String.IsNullOrEmpty(responseContent))
+                {
+                    return;
+                }
 
                 object results = Json.Parse(responseContent);
 
@@ -147,6 +209,11 @@ namespace BL.Data
                 {
                     this.Saved(this, EventArgs.Empty);
                 }
+                
+
+                this.saveOperation.CompleteAsAsyncDone(this);
+
+                this.saveOperation = null;
             }
         }
     }

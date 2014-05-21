@@ -33,9 +33,34 @@
     <DocumentationFile>
     </DocumentationFile>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Staging|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>..\..\web\gs\tracer\stg\</OutputPath>
+    <DefineConstants>CODE_ANALYSIS;SCRIPTSHARP</DefineConstants>
+    <NoWarn>0028, 1591, 1684</NoWarn>
+    <NoStdLib>true</NoStdLib>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <LangVersion>ISO-2</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>Properties\FxCop.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'LocalRelease|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>..\..\web\gs\tracer\1.0\</OutputPath>
+    <DefineConstants>CODE_ANALYSIS;SCRIPTSHARP</DefineConstants>
+    <NoWarn>0028, 1591, 1684</NoWarn>
+    <NoStdLib>true</NoStdLib>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <LangVersion>ISO-2</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>Properties\FxCop.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
   <ItemGroup>
     <Compile Include="FieldChoiceCollection.cs" />
     <Compile Include="FieldChoice.cs" />
+    <Compile Include="FieldUserInterfaceType.cs" />
     <Compile Include="StandaloneItem.cs" />
     <Compile Include="Item.cs" />
     <Compile Include="Native\OData.cs" />
@@ -61,9 +86,9 @@
     <Compile Include="ComparisonClause.cs" />
     <Compile Include="EqualsClause.cs" />
     <Compile Include="FieldType.cs" />
-    <Compile Include="ItemEvent.cs" />
+    <Compile Include="DataStoreItemEvent.cs" />
     <Compile Include="ItemSet.cs" />
-    <Compile Include="ItemSetEvent.cs" />
+    <Compile Include="DataStoreItemSetEvent.cs" />
     <Compile Include="List.cs" />
     <Compile Include="ListFileSyncManager.cs" />
     <Compile Include="Query.cs" />

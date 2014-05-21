@@ -38,10 +38,19 @@ namespace BL.Data
         {
             StringBuilder sb = new StringBuilder();
             sb.Append("[");
+            
+            bool isFirst = true;
 
             foreach (Clause dsc in this.clauses)
             {
+                if (!isFirst)
+                {
+                    sb.Append(",");
+                }
 
+                sb.Append(dsc.ToString());
+
+                isFirst = false;
             }
 
             foreach (ClauseGroup dsg in this.groups)

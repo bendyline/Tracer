@@ -12,6 +12,7 @@ namespace BL.Data
         private String name;
         private String displayName;
         private FieldType fieldType;
+        private FieldUserInterfaceType userInterfaceType;
         private FieldChoiceCollection fieldChoices;
 
         public FieldChoiceCollection Choices
@@ -58,6 +59,18 @@ namespace BL.Data
             get
             {
                 return this.fieldType;
+            }
+        }
+
+        public FieldUserInterfaceType UserInterfaceType
+        {
+            get
+            {
+                return this.userInterfaceType;
+            }
+            set
+            {
+                this.userInterfaceType = value;
             }
         } 
 

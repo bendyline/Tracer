@@ -132,7 +132,7 @@ namespace BL.Data
         {
             foreach (ODataEntity ode in this.allItemsSet.Items)
             {
-                ode.Save();
+                ode.Save(null, null);
             }
         }
 
@@ -163,7 +163,7 @@ namespace BL.Data
         {
             String queryString = query.ToString().ToLowerCase();
 
-            ODataItemSet odis = null;
+            ODataItemSet odis = this.itemsByQuery[queryString];
 
             if (odis == null)
             {
@@ -173,6 +173,13 @@ namespace BL.Data
             }
 
             return odis;
+        }
+
+        public void SetDataForQuery(Query query, object data)
+        {
+            ODataItemSet dataSet = (ODataItemSet)EnsureItemSet(query);
+
+            dataSet.SetFromData(data);
         }
 
         public void BeginUpdate(AsyncCallback callback, object asyncState)

@@ -13,10 +13,11 @@ namespace BL.Data
         private List<IItem> items;
         private Dictionary<String, IItem> itemsById;
 
-        private ODataEntityType entity;
+        private ODataEntityType entityType;
         private Query query;
 
         private Operation retrieveOperation;
+        private bool isRetrieved = false;
 
         public IItem FirstItem
         {
@@ -48,13 +49,13 @@ namespace BL.Data
         {
             get
             {
-                return this.entity;
+                return this.entityType;
             }
         }
 
         public ODataItemSet(IDataStoreType list, Query query)
         {
-            this.entity = (ODataEntityType)list;
+            this.entityType = (ODataEntityType)list;
             this.query = query;
             this.itemsById = new Dictionary<string, IItem>();
             this.items = new List<IItem>();
@@ -62,7 +63,7 @@ namespace BL.Data
 
         public IItem Create()
         {
-            ODataEntity item = new ODataEntity(this.entity);
+            ODataEntity item = new ODataEntity(this.entityType);
           
             ODataStore store = (ODataStore)this.Type.Store;
 
@@ -87,7 +88,7 @@ namespace BL.Data
         private String GetODataQueryString()
         {
             StringBuilder filter = new StringBuilder();
-
+            bool wroteData = false;
             foreach (Clause clause in this.query.Clauses)
             {
                 if (clause is EqualsClause)
@@ -98,6 +99,12 @@ namespace BL.Data
 
                     if (field != null)
                     {
+                        if (wroteData)
+                        {
+                            filter.Append(" and ");
+                        }
+
+                        wroteData = true;
                         if (field.Type == FieldType.Integer || field.Type == FieldType.BigInteger)
                         {
                             filter.Append(fieldName + " eq " + ((EqualsClause)clause).Value + "");
@@ -145,6 +152,22 @@ namespace BL.Data
 
         public void BeginRetrieve(AsyncCallback callback, object state)
         {
+            if (this.isRetrieved)
+            {
+                if (callback != null)
+                {
+                    CallbackResult cr = new CallbackResult();
+                    cr.Data = this;
+                    cr.AsyncState = state;
+                    cr.CompletedSynchronously = true;
+                    cr.IsCompleted = true;
+
+                    callback(cr);
+                }
+
+                return;
+            }
+
             String queryString = GetODataQueryString();
 
             String endpoint = ((ODataEntityType)this.Type).Url  + "?" + queryString;
@@ -165,13 +188,48 @@ namespace BL.Data
                 xhr.Open("GET", endpoint);
                 
                 xhr.SetRequestHeader("Accept", "application/json;odata=minimalmetadata");
-                xhr.SetRequestHeader("Content-Type", "application/json;odata=minimalmetadata");
+                xhr.SetRequestHeader("Content-Type", "application/json");
 
                 xhr.OnReadyStateChange = new Action(this.EndRetrieve);
                 this.retrieveOperation.Tag = xhr;
 
                 xhr.Send();
             }
+        }
+
+        public void SetFromData(object results)
+        {
+            if (results == null)
+            {
+                return;
+            }
+
+            Script.Literal(@"
+                    var fieldarr = {1};
+                    for (var i=0; i<{0}.length; i++)
+                    {{
+                        var oc = {0}[i];
+                        var newe = new BL.Data.ODataEntity({2});
+  
+                        for (var j=0; j<fieldarr.length; j++)
+                        {{
+                            var fi = fieldarr[j];
+                            var fiName = fi.get_name();
+
+                            var val = oc[fi.get_name()];
+
+                            if (val != null)
+                            {{
+                                newe.setValue(fiName, val);
+                            }}
+                        }}
+newe.setStatus(2);
+this.add(newe);
+                    }}
+                    
+", results, this.entityType.Fields, this.entityType);
+
+            this.isRetrieved = true;
         }
 
         public void EndRetrieve()
@@ -188,43 +246,12 @@ namespace BL.Data
 
                 object results = Json.Parse(responseContent);
 
-                Script.Literal(@"
-                    var oarr = {0}.value;
-                    var fieldarr = {1};
-                    for (var i=0; i<oarr.length; i++)
-                    {{
-                        var oc = oarr[i];
-                        var newe = new BL.Data.ODataEntity();
+                Script.Literal(@"{0}={0}.value", results);
 
-                        for (var j=0; j<fieldarr.length; j++)
-                        {{
-                            var fi = fieldarr[j];
-                            var fiName = fi.get_name();
+                this.SetFromData(results);
 
-                            var val = oc[fi.get_name()];
-
-                            if (val != null)
-                            {{
-                                newe.setValue(fiName, val);
-                            }}
-                        }}
-
-this.add(newe);
-                    }}
-                    
-", results, this.entity.Fields);
-
-                foreach (CallbackState cs in o.CallbackStates)
-                {
-                    CallbackResult cr = new CallbackResult();
-
-                    cr.Data = this;
-                    cr.IsCompleted = true;
-
-                    cs.Callback(cr);
-                }
+                o.CompleteAsAsyncDone(this);
             }
         }
-
     }
 }

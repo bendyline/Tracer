@@ -9,7 +9,7 @@ namespace BL.Data
     public abstract class Item : IItem
     {
         private Dictionary<String, object> data;
-        private ItemStatus status;
+        private ItemStatus status = ItemStatus.Unchanged;
         
         public event DataStoreItemEventHandler ItemChanged;
 
@@ -105,6 +105,11 @@ namespace BL.Data
                 return;
             }
 
+            if (this.status == ItemStatus.Unchanged)
+            {
+                this.status = ItemStatus.Update;
+            }
+
             this.data[name] = value;
 
             if (this.ItemChanged != null)
@@ -140,6 +145,13 @@ namespace BL.Data
             }
 
             this.data[name] = value;
+
+            if (this.status == ItemStatus.Unchanged)
+            {
+                this.status = ItemStatus.Update;
+            }
+
+
 
             if (this.ItemChanged != null)
             {

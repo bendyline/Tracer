@@ -7,8 +7,8 @@ namespace BL.Data
 {
     public enum FieldType
     {
-        Text = 0,
-        Note = 1,
+        ShortText = 0,
+        UnboundedText = 1,
         Integer = 2,
         Enumeration = 3,
         BigInteger = 4,
