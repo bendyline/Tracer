@@ -232,6 +232,17 @@ this.add(newe);
             this.isRetrieved = true;
         }
 
+
+        public void Remove(IItem item)
+        {
+            if (this.Items.Contains(item))
+            {
+                this.itemsById.Remove(item.Id);
+                this.Items.Remove(item);
+            }
+        }
+
+
         public void EndRetrieve()
         {
             Operation o = this.retrieveOperation;

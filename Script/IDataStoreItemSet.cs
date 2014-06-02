@@ -36,5 +36,7 @@ namespace BL.Data
         void BeginRetrieve(AsyncCallback callback, object state);
 
         void Add(IItem item);
+
+        void Remove(IItem item);
     }
 }

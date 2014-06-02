@@ -49,6 +49,14 @@ namespace BL.Data
         public abstract void BeginRetrieve(AsyncCallback callback, object state);
         public abstract ICollection<IItem> EndRetrieve(IAsyncResult result);
 
+        public void Remove(IItem item)
+        {
+            if (this.Items.Contains(item))
+            {
+                this.Items.Remove(item);
+            }
+        }
+
         public virtual void Add(IItem item)
         {
             if (!this.Items.Contains(item))

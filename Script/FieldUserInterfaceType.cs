@@ -10,6 +10,9 @@ namespace BL.Data
         TypeDefault = 0,
         User = 1,
         Choice = 2,
-        Scale = 3
+        Scale = 3,
+        Phone = 4,
+        Email = 5,
+        Numeric = 6
     }
 }

@@ -94,6 +94,16 @@ namespace BL.Data
             this.Items.Add(item);
         }
 
+        public void Remove(IItem item)
+        {
+            if (this.Items.Contains(item))
+            {
+                this.itemsById.Remove(item.Id);
+                this.Items.Remove(item);
+            }
+        }
+
+
         public IItem GetItemById(String id)
         {
             return this.itemsById[id];
