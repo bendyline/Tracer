@@ -7,10 +7,13 @@ namespace BL.Data
 {
     public interface IDataStoreField
     {
+        event PropertyChangedEventHandler PropertyChanged;
+
         FieldChoiceCollection Choices { get;  }
         String DisplayName { get; }
         String Name { get; }
         FieldType Type { get; }
         FieldUserInterfaceType UserInterfaceType { get; }
+        FieldUserInterfaceOptions UserInterfaceOptions { get; set;  }
     }
 }

@@ -2,17 +2,17 @@
     You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0. */
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace BL.Data
 {
-    public enum FieldType
+    public class LessThanClause : ComparisonClause
     {
-        ShortText = 0,
-        UnboundedText = 1,
-        Integer = 2,
-        BigInteger = 4,
-        DateTime = 5,
-        Geopoint = 6,
-        BigNumber = 7
+
+        public override string ToString()
+        {
+            return "{" + this.FieldName + "<" + this.GetStringValue() + "}";
+        }
     }
 }

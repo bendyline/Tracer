@@ -91,9 +91,9 @@ namespace BL.Data
             bool wroteData = false;
             foreach (Clause clause in this.query.Clauses)
             {
-                if (clause is EqualsClause)
+                if (clause is ComparisonClause)
                 {
-                    String fieldName = ((EqualsClause)clause).FieldName;
+                    String fieldName = ((ComparisonClause)clause).FieldName;
 
                     IDataStoreField field = (IDataStoreField)this.Type.GetField(fieldName);
 
@@ -105,14 +105,31 @@ namespace BL.Data
                         }
 
                         wroteData = true;
-                        if (field.Type == FieldType.Integer || field.Type == FieldType.BigInteger)
+
+                        String joiner = "";
+
+                        if (clause is GreaterThanClause)
                         {
-                            filter.Append(fieldName + " eq " + ((EqualsClause)clause).Value + "");
+                            joiner = "gt";
+                        }
+                        else if (clause is LessThanClause)
+                        {
+                            joiner = "lt";
                         }
                         else
                         {
-                            filter.Append(fieldName + " eq \'" + ((EqualsClause)clause).Value + "\'");
+                            joiner = "eq";
                         }
+
+                        if (field.Type == FieldType.Integer || field.Type == FieldType.BigInteger || field.Type == FieldType.BigNumber)
+                        {
+                            filter.Append(fieldName + " " + joiner + " " + ((EqualsClause)clause).Value + "");
+                        }
+                        else
+                        {
+                            filter.Append(fieldName + " " + joiner + " \'" + ((EqualsClause)clause).Value + "\'");
+                        }
+
                     }
                 }
             }

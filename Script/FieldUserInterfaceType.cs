@@ -13,6 +13,7 @@ namespace BL.Data
         Scale = 3,
         Phone = 4,
         Email = 5,
-        Numeric = 6
+        Numeric = 6,
+        NoValue=99
     }
 }

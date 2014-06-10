@@ -95,7 +95,7 @@ namespace BL.Data
 
                     if (value != null)
                     {
-                        if (f.Type == FieldType.Integer)
+                        if (f.Type == FieldType.Integer || f.Type == FieldType.Geopoint || f.Type == FieldType.BigNumber)
                         {
                             result.Append(",\"" + f.Name + "\":" + value);
                         }

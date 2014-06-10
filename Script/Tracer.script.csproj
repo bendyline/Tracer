@@ -58,6 +58,9 @@
     <CodeAnalysisRuleSet>Properties\FxCop.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="FieldUserInterfaceOptions.cs" />
+    <Compile Include="LessThanClause.cs" />
+    <Compile Include="GreaterThanClause.cs" />
     <Compile Include="FieldChoiceCollection.cs" />
     <Compile Include="FieldChoice.cs" />
     <Compile Include="FieldUserInterfaceType.cs" />

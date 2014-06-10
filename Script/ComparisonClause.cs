@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 namespace BL.Data
@@ -34,9 +35,10 @@ namespace BL.Data
 
             set
             {
+                Debug.Assert(value != null);
+
                 this.value = value;
             }
-
         }
 
         protected String GetStringValue()

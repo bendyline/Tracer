@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 
 namespace BL.Data
 {
@@ -13,7 +14,36 @@ namespace BL.Data
         private String displayName;
         private FieldType fieldType;
         private FieldUserInterfaceType userInterfaceType;
+        private FieldUserInterfaceOptions userInterfaceOptions;
         private FieldChoiceCollection fieldChoices;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        [ScriptName("o_userInterfaceOptions")]
+        public FieldUserInterfaceOptions UserInterfaceOptions
+        {
+            get
+            {
+                if (this.userInterfaceOptions == null)
+                {
+                    this.userInterfaceOptions = new FieldUserInterfaceOptions();
+                }
+
+                return this.userInterfaceOptions;
+            }
+
+            set
+            {
+                if (this.userInterfaceOptions == value)
+                {
+                    return;
+                }
+
+                this.userInterfaceOptions = value;
+
+                this.NotifyPropertyChanged("UserInterfaceOptions");
+            }
+        }
 
         public FieldChoiceCollection Choices
         {
@@ -28,6 +58,7 @@ namespace BL.Data
 
             }
         }
+
         public String DisplayName
         {
             get
@@ -42,7 +73,14 @@ namespace BL.Data
 
             set
             {
+                if (this.displayName == value)
+                {
+                    return;
+                }
+
                 this.displayName = value;
+
+                this.NotifyPropertyChanged("DisplayName");
             }
         }
 
@@ -70,7 +108,14 @@ namespace BL.Data
             }
             set
             {
+                if (this.userInterfaceType == value)
+                {
+                    return;
+                }
+
                 this.userInterfaceType = value;
+
+                this.NotifyPropertyChanged("UserInterfaceType");
             }
         } 
 
@@ -78,6 +123,16 @@ namespace BL.Data
         {
             this.name = name;
             this.fieldType = fieldType;
+        }
+
+        protected void NotifyPropertyChanged(String propertyName)
+        {
+            if (this.PropertyChanged != null)
+            {
+                PropertyChangedEventArgs pcea = new PropertyChangedEventArgs(propertyName);
+
+                this.PropertyChanged(this, pcea);
+            }
         }
     }
 }
