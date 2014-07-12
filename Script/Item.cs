@@ -151,8 +151,6 @@ namespace BL.Data
                 this.status = ItemStatus.Update;
             }
 
-
-
             if (this.ItemChanged != null)
             {
                 DataStoreItemEventArgs dsiea = new DataStoreItemEventArgs(this);

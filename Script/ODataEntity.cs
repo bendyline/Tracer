@@ -95,7 +95,18 @@ namespace BL.Data
 
                     if (value != null)
                     {
-                        if (f.Type == FieldType.Integer || f.Type == FieldType.Geopoint || f.Type == FieldType.BigNumber)
+                        if (f.Type == FieldType.BoolChoice)
+                        {
+                            if (value == "true")
+                            {
+                                result.Append(",\"" + f.Name + "\":true");
+                            }
+                            else
+                            {
+                                result.Append(",\"" + f.Name + "\":false");
+                            }
+                        }
+                        else if (f.Type == FieldType.Integer || f.Type == FieldType.Geopoint || f.Type == FieldType.BigNumber)
                         {
                             result.Append(",\"" + f.Name + "\":" + value);
                         }

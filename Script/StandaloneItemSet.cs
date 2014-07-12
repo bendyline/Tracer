@@ -17,6 +17,9 @@ namespace BL.Data
 
         private int newItemsCreated = 0;
 
+        public event DataStoreItemSetEventHandler ItemSetChanged;
+        public event DataStoreItemEventHandler ItemInSetChanged;
+
         public IItem FirstItem
         {
             get
@@ -32,8 +35,6 @@ namespace BL.Data
                 return items;
             }
         }
-
-        public event DataStoreItemSetEventHandler ItemSetChanged;
 
         public Query Query
         {
@@ -69,9 +70,7 @@ namespace BL.Data
 
             item.SetStatus(ItemStatus.NewItem);
 
-            this.items.Add(item);
-
-            this.itemsById[item.Id] = item;
+            this.Add(item);
 
             return item;
         }

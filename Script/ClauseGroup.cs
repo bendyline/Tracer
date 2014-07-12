@@ -7,10 +7,30 @@ using System.Linq;
 
 namespace BL.Data
 {
+    public enum GroupJoiner
+    {
+        And = 0,
+        Or = 1
+    }
+
     public class ClauseGroup
     {
         private List<Clause> clauses;
         private List<ClauseGroup> groups;
+        private GroupJoiner joiner = GroupJoiner.And;
+
+        public GroupJoiner Joiner
+        {
+            get
+            {
+                return this.joiner;
+            }
+
+            set
+            {
+                this.joiner = value;
+            }
+        }
 
         public List<ClauseGroup> Groups
         {

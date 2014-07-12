@@ -12,6 +12,9 @@ namespace BL.Data
         private IDataStoreType list;
         private Query query;
 
+        public event DataStoreItemSetEventHandler ItemSetChanged;
+        public event DataStoreItemEventHandler ItemInSetChanged;
+
         public IItem FirstItem
         {
             get
@@ -20,8 +23,6 @@ namespace BL.Data
             }
         }
         public abstract List<IItem> Items { get; }
-
-        public event DataStoreItemSetEventHandler ItemSetChanged;
 
         public Query Query
         {

@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Html;
 using System.Net;
 using System.Serialization;
 
@@ -18,6 +19,29 @@ namespace BL.Data
 
         private Operation retrieveOperation;
         private bool isRetrieved = false;
+        private bool autoSave = false;
+        private bool autoSavePending = false;
+
+        public event DataStoreItemSetEventHandler ItemSetChanged;
+        public event DataStoreItemEventHandler ItemInSetChanged;
+
+        public bool AutoSave
+        {
+            get
+            {
+                return autoSave;
+            }
+
+            set
+            {
+                this.autoSave = value;
+
+                if (this.autoSave)
+                {
+                    Window.AddEventListener("beforeunload", this.WindowShuttingDown, true);
+                }
+            }
+        }
 
         public IItem FirstItem
         {
@@ -34,8 +58,6 @@ namespace BL.Data
                 return items;
             }
         }
-
-        public event DataStoreItemSetEventHandler ItemSetChanged;
 
         public Query Query
         {
@@ -73,9 +95,7 @@ namespace BL.Data
 
             item.SetStatus(ItemStatus.NewItem);
 
-            this.items.Add(item);
-
-            this.itemsById[item.Id] = item;
+            this.Add(item);
 
             return item;
         }
@@ -101,7 +121,14 @@ namespace BL.Data
                     {
                         if (wroteData)
                         {
-                            filter.Append(" and ");
+                            if (this.query.Joiner == GroupJoiner.And)
+                            {
+                                filter.Append(" and ");
+                            }
+                            else
+                            {
+                                filter.Append(" or ");
+                            }
                         }
 
                         wroteData = true;
@@ -156,6 +183,7 @@ namespace BL.Data
             this.itemsById[item.Id] = item;
             this.Items.Add(item);
 
+            item.ItemChanged += item_ItemChanged;
 
             if (this.ItemSetChanged != null)
             {
@@ -164,6 +192,50 @@ namespace BL.Data
                 dsiea.AddedItems.Add(item);
 
                 this.ItemSetChanged(this, dsiea);
+            }
+        }
+
+        private void item_ItemChanged(object sender, DataStoreItemEventArgs e)
+        {
+            if (this.ItemInSetChanged != null)
+            {
+                this.ItemInSetChanged(this, e);
+            }
+
+            this.ConsiderAutoSave();
+        }
+
+        private void ConsiderAutoSave()
+        {
+            if (this.autoSave == false)
+            {
+                return;
+            }
+
+            // queue up autosaves
+            if (!this.autoSavePending)
+            {
+                this.autoSavePending = true;
+
+                Window.SetTimeout(this.AutoSaveUpdate, 3000);
+            }
+        }
+
+        private void WindowShuttingDown(ElementEvent e)
+        {
+            if (this.autoSavePending)
+            {
+                this.AutoSaveUpdate();
+            }
+        }
+
+        private void AutoSaveUpdate()
+        {
+            this.autoSavePending = false;
+
+            foreach (IItem item in this.Items)
+            {
+                ((ODataEntity)item).Save(null, null);
             }
         }
 

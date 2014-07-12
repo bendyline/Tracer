@@ -30,6 +30,7 @@ namespace BL.Data
         }
 
         event DataStoreItemSetEventHandler ItemSetChanged;
+        event DataStoreItemEventHandler ItemInSetChanged;
 
         IItem GetItemById(String id);
 

@@ -13,6 +13,7 @@ namespace BL.Data
         BigInteger = 4,
         DateTime = 5,
         Geopoint = 6,
-        BigNumber = 7
+        BigNumber = 7,
+        BoolChoice = 8,
     }
 }
