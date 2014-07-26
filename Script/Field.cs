@@ -12,12 +12,27 @@ namespace BL.Data
     {
         private String name;
         private String displayName;
+        private bool required;
         private FieldType fieldType;
         private FieldUserInterfaceType userInterfaceType;
         private FieldUserInterfaceOptions userInterfaceOptions;
         private FieldChoiceCollection fieldChoices;
 
         public event PropertyChangedEventHandler PropertyChanged;
+
+        [ScriptName("b_required")]
+        public bool Required
+        {
+            get
+            {
+                return this.required;
+            }
+
+            set
+            {
+                this.required = value;
+            }
+        }
 
         [ScriptName("o_userInterfaceOptions")]
         public FieldUserInterfaceOptions UserInterfaceOptions

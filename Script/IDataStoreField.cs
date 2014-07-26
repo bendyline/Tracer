@@ -8,6 +8,7 @@ namespace BL.Data
     public interface IDataStoreField
     {
         event PropertyChangedEventHandler PropertyChanged;
+        bool Required { get; }
 
         FieldChoiceCollection Choices { get;  }
         String DisplayName { get; }

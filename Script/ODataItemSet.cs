@@ -25,6 +25,8 @@ namespace BL.Data
         public event DataStoreItemSetEventHandler ItemSetChanged;
         public event DataStoreItemEventHandler ItemInSetChanged;
 
+        private ElementEventListener shuttingDownHandler;
+
         public bool AutoSave
         {
             get
@@ -34,11 +36,22 @@ namespace BL.Data
 
             set
             {
+                if (this.autoSave == null)
+                {
+                    return;
+                }
+
                 this.autoSave = value;
 
                 if (this.autoSave)
                 {
-                    Window.AddEventListener("beforeunload", this.WindowShuttingDown, true);
+                    Window.AddEventListener("beforeunload", this.shuttingDownHandler, true);
+
+                    this.ConsiderAutoSave();
+                }
+                else
+                {
+                    Window.RemoveEventListener("beforeunload", this.shuttingDownHandler);
                 }
             }
         }
@@ -81,6 +94,7 @@ namespace BL.Data
             this.query = query;
             this.itemsById = new Dictionary<string, IItem>();
             this.items = new List<IItem>();
+            this.shuttingDownHandler = this.WindowShuttingDown;
         }
 
         public IItem Create()
@@ -235,7 +249,12 @@ namespace BL.Data
 
             foreach (IItem item in this.Items)
             {
-                ((ODataEntity)item).Save(null, null);
+                ODataEntity ode = (ODataEntity)item;
+
+                if (!ode.Disconnected)
+                {
+                    ode.Save(null, null);
+                }
             }
         }
 

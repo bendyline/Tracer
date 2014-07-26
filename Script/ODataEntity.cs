@@ -187,18 +187,19 @@ namespace BL.Data
         {
             if (this.saveRequest != null && this.saveRequest.ReadyState == ReadyState.Loaded)
             {
-                this.SetStatus(ItemStatus.Unchanged);
-                
-                String responseContent = this.saveRequest.ResponseText;
+                ItemStatus previousStatus = this.Status;
 
-                if (String.IsNullOrEmpty(responseContent))
+                if (this.saveRequest.Status < 400)
                 {
-                    return;
-                }
+                    this.SetStatus(ItemStatus.Unchanged);
 
-                object results = Json.Parse(responseContent);
+                    String responseContent = this.saveRequest.ResponseText;
 
-                Script.Literal(@"
+                    if (!String.IsNullOrEmpty(responseContent))
+                    {
+                        object results = Json.Parse(responseContent);
+
+                        Script.Literal(@"
                     var oc = {0};
                     var fieldarr = {1};
 
@@ -214,7 +215,15 @@ namespace BL.Data
                                 this.setValue(fiName, val);
                             }}
                         }}
-", results, this.Type.Fields);
+
+                if ({2}==0 && oc[""Id""] !=null)
+                {{
+                    this.setId(oc[""Id""]);
+                }}
+    
+", results, this.Type.Fields, previousStatus);
+                    }
+                }
 
                 if (this.Saved != null)
                 {

@@ -10,8 +10,22 @@ namespace BL.Data
     {
         private Dictionary<String, object> data;
         private ItemStatus status = ItemStatus.Unchanged;
+        private String localOnlyUniqueId;
         
         public event DataStoreItemEventHandler ItemChanged;
+
+        public virtual String LocalOnlyUniqueId
+        {
+            get
+            {
+                if (this.localOnlyUniqueId == null)
+                {
+                    this.localOnlyUniqueId = Utilities.GetRandomId();
+                }
+
+                return this.localOnlyUniqueId;
+            }
+        }
 
         public abstract String Id { get;  }
 

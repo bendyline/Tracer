@@ -10,6 +10,8 @@ namespace BL.Data
         event DataStoreItemEventHandler ItemChanged;
 
         string Id { get; }
+        string LocalOnlyUniqueId { get;  }
+
         IDataStoreType Type { get; set; }
         object GetValue(String name);
         void SetValue(String name, object value);

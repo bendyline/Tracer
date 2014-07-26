@@ -11,7 +11,9 @@ namespace BL.Data
     public enum ScaleType
     {
         FiveValues = 0,
-        SevenValues = 1
+        SevenValues = 1,
+        FiveStars = 2,
+        FiveAgree = 3
     }
 
     public class FieldUserInterfaceOptions : SerializableObject
@@ -19,6 +21,28 @@ namespace BL.Data
         private String rangeStartDescription;
         private String rangeEndDescription;
         private ScaleType scaleType = ScaleType.FiveValues;
+        private bool displayKey = false;
+
+        [ScriptName("b_displayKey")]
+        public bool DisplayKey
+        {
+            get
+            {
+                return this.displayKey;
+            }
+
+            set
+            {
+                if (this.displayKey == value)
+                {
+                    return;
+                }
+
+                this.displayKey = value;
+
+                this.NotifyPropertyChanged("DisplayKey");
+            }
+        }
 
         [ScriptName("i_scaleType")]
         public ScaleType ScaleType
