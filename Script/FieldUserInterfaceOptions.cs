@@ -20,6 +20,7 @@ namespace BL.Data
     {
         private String rangeStartDescription;
         private String rangeEndDescription;
+        private String placeholder;
         private ScaleType scaleType = ScaleType.FiveValues;
         private bool displayKey = false;
 
@@ -107,9 +108,60 @@ namespace BL.Data
             }
         }
 
+        [ScriptName("s_placeholder")]
+        public String Placeholder
+        {
+            get
+            {
+                return this.placeholder;
+            }
+
+            set
+            {
+                if (this.placeholder == value)
+                {
+                    return;
+                }
+
+                this.placeholder = value;
+
+                this.NotifyPropertyChanged("Placeholder");
+            }
+        }
+
         public FieldUserInterfaceOptions()
         {
 
+        }
+
+        public virtual bool IsEqualTo(FieldUserInterfaceOptions fuio)
+        {
+            if (this.Placeholder != fuio.Placeholder)
+            {
+                return false;
+            }
+
+            if (this.RangeEndDescription != fuio.RangeEndDescription)
+            {
+                return false;
+            }
+
+            if (this.RangeStartDescription != fuio.RangeStartDescription)
+            {
+                return false;
+            }
+
+            if (this.ScaleType != fuio.ScaleType)
+            {
+                return false;
+            }
+
+            if (this.DisplayKey != fuio.DisplayKey)
+            {
+                return false;
+            }
+
+            return true;
         }
     }
 }

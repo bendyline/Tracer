@@ -60,29 +60,20 @@ namespace BL.Data
             this.data = new Dictionary<string, object>();
         }
 
+
+        public static object GetDataObject(IDataStoreItemSet itemSet, IItem item)
+        {
+            return ItemSet.GetDataObject(itemSet, item);
+        }
+
+        public static void SetDataObject(IDataStoreItemSet itemSet, IItem item, object data)
+        {
+            ItemSet.SetDataObject(itemSet, item, data);
+        }
+
         public void SetData(object data)
         {
             this.data = (Dictionary<String, object>)data;
-        }
-
-        public Int32 GetInt32Value(String name)
-        {
-            if (!this.data.ContainsKey(name))
-            {
-                return 0;
-            }
-
-            return Int32.Parse((String)this.data[name]);
-        }
-
-        public Int64 GetInt64Value(String name)
-        {
-            if (!this.data.ContainsKey(name))
-            {
-                return 0;
-            }
-
-            return (Int64)Number.ParseInt((String)this.data[name]);
         }
 
         public object GetValue(String name)
@@ -134,6 +125,196 @@ namespace BL.Data
             }
         }
 
+        public Nullable<Int64> GetInt64Value(String name)
+        {
+            if (!this.data.ContainsKey(name))
+            {
+                return null;
+            }
+
+            object val = this.data[name];
+
+            if (val == null)
+            {
+                return null;
+            }
+            else if (val is Int64)
+            {
+                return (Int64)val;
+            }
+            else if (val is String)
+            {
+                return (Int64)Number.Parse((String)val);
+            }
+
+            return null;
+        }
+
+        public void SetInt64Value(String name, Nullable<Int64> value)
+        {
+            if (this.GetInt64Value(name) == value)
+            {
+                return;
+            }
+
+            this.data[name] = value;
+
+            if (this.status == ItemStatus.Unchanged)
+            {
+                this.status = ItemStatus.Update;
+            }
+
+            if (this.ItemChanged != null)
+            {
+                DataStoreItemEventArgs dsiea = new DataStoreItemEventArgs(this);
+
+                this.ItemChanged(this, dsiea);
+            }
+        }
+        
+        public Nullable<Int32> GetInt32Value(String name)
+        {
+            if (!this.data.ContainsKey(name))
+            {
+                return null;
+            }
+
+            object val = this.data[name];
+
+            if (val == null)
+            {
+                return null;
+            }
+            if (val is Int32)
+            {
+                return (Int32)val;
+            }
+            else if (val is String)
+            {
+                return Int32.Parse((String)val);
+            }
+
+            return null;
+        }
+
+        public void SetInt32Value(String name, Nullable<Int32> value)
+        {
+            if (this.GetInt32Value(name) == value)
+            {
+                return;
+            }
+
+            this.data[name] = value;
+
+            if (this.status == ItemStatus.Unchanged)
+            {
+                this.status = ItemStatus.Update;
+            }
+
+            if (this.ItemChanged != null)
+            {
+                DataStoreItemEventArgs dsiea = new DataStoreItemEventArgs(this);
+
+                this.ItemChanged(this, dsiea);
+            }
+        }
+        
+
+        public Date GetDateValue(String name)
+        {
+            if (!this.data.ContainsKey(name))
+            {
+                return Date.Empty;
+            }
+
+            object val = this.data[name];
+
+            if (val == null)
+            {
+                return null;
+            }
+
+            if (val is Date)
+            {
+                return (Date)val;
+            }
+            else if (val is String)
+            {
+                return Date.Parse((String)val);
+            }
+
+            return null;
+        }
+
+        public void SetDateValue(String name, Date value)
+        {
+            if (this.GetDateValue(name) == value)
+            {
+                return;
+            }
+
+            this.data[name] = value;
+
+            if (this.status == ItemStatus.Unchanged)
+            {
+                this.status = ItemStatus.Update;
+            }
+
+            if (this.ItemChanged != null)
+            {
+                DataStoreItemEventArgs dsiea = new DataStoreItemEventArgs(this);
+
+                this.ItemChanged(this, dsiea);
+            }
+        }
+        
+        public Nullable<bool> GetBooleanValue(String name)
+        {
+            if (!this.data.ContainsKey(name))
+            {
+                return null;
+            }
+
+            object val = this.data[name];
+
+            if (val == null)
+            {
+                return null;
+            }
+            else if (val is bool)
+            {
+                return (bool)val;
+            }
+            else if (val is String)
+            {
+                return Boolean.Parse((String)val);
+            }
+
+            return null;
+        }
+
+        public void SetBooleanValue(String name, Nullable<bool> value)
+        {
+            if (this.GetBooleanValue(name) == value)
+            {
+                return;
+            }
+
+            this.data[name] = value;
+
+            if (this.status == ItemStatus.Unchanged)
+            {
+                this.status = ItemStatus.Update;
+            }
+
+            if (this.ItemChanged != null)
+            {
+                DataStoreItemEventArgs dsiea = new DataStoreItemEventArgs(this);
+
+                this.ItemChanged(this, dsiea);
+            }
+        }
+        
         public String GetStringValue(String name)
         {
             if (!this.data.ContainsKey(name))
