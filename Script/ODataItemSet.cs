@@ -13,6 +13,7 @@ namespace BL.Data
     {
         private List<IItem> items;
         private Dictionary<String, IItem> itemsById;
+        private Dictionary<String, IItem> itemsByLocalOnlyUniqueId;
 
         private ODataEntityType entityType;
         private Query query;
@@ -93,6 +94,7 @@ namespace BL.Data
             this.entityType = (ODataEntityType)list;
             this.query = query;
             this.itemsById = new Dictionary<string, IItem>();
+            this.itemsByLocalOnlyUniqueId = new Dictionary<string, IItem>();
             this.items = new List<IItem>();
             this.shuttingDownHandler = this.WindowShuttingDown;
         }
@@ -107,16 +109,35 @@ namespace BL.Data
 
             item.SetId((-store.NewItemsCreated).ToString());
 
-            item.SetStatus(ItemStatus.NewItem);
+            item.SetLocalStatus(ItemLocalStatus.NewItem);
 
             this.Add(item);
 
             return item;
         }
 
+        public void Clear()
+        {
+            List<IItem> itemsTemp = new List<IItem>();
+
+            foreach (IItem item in this.Items)
+            {
+                itemsTemp.Add(item);
+            }
+
+            foreach (IItem item in itemsTemp)
+            {
+                this.Remove(item);
+            }
+        }
+
         public IItem GetItemById(String id)
         {
             return this.itemsById[id];
+        }
+        public IItem GetItemByLocalOnlyUniqueId(String id)
+        {
+            return this.itemsByLocalOnlyUniqueId[id];
         }
 
         private String GetODataQueryString()
@@ -194,6 +215,7 @@ namespace BL.Data
                 return;
             }
 
+            this.itemsByLocalOnlyUniqueId[item.LocalOnlyUniqueId] = item;
             this.itemsById[item.Id] = item;
             this.Items.Add(item);
 
@@ -251,7 +273,7 @@ namespace BL.Data
             {
                 ODataEntity ode = (ODataEntity)item;
 
-                if (!ode.Disconnected)
+                if (!ode.Disconnected && ode.IsValid)
                 {
                     ode.Save(null, null);
                 }
@@ -331,7 +353,7 @@ namespace BL.Data
                                 newe.setValue(fiName, val);
                             }}
                         }}
-newe.setStatus(2);
+newe.setLocalStatus(2);
 this.add(newe);
                     }}
                     
@@ -340,16 +362,24 @@ this.add(newe);
             this.isRetrieved = true;
         }
 
-
         public void Remove(IItem item)
         {
             if (this.Items.Contains(item))
             {
+                this.itemsByLocalOnlyUniqueId.Remove(item.LocalOnlyUniqueId);
                 this.itemsById.Remove(item.Id);
                 this.Items.Remove(item);
+
+                if (this.ItemSetChanged != null)
+                {
+                    DataStoreItemSetEventArgs dsiea = new DataStoreItemSetEventArgs(this);
+
+                    dsiea.RemovedItems.Add(item);
+
+                    this.ItemSetChanged(this, dsiea);
+                }
             }
         }
-
 
         public void EndRetrieve()
         {

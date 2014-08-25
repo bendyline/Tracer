@@ -9,10 +9,20 @@ namespace BL.Data
     public abstract class Item : IItem
     {
         private Dictionary<String, object> data;
-        private ItemStatus status = ItemStatus.Unchanged;
+        private ItemLocalStatus localStatus = ItemLocalStatus.Unchanged;
         private String localOnlyUniqueId;
+        private StandardStatus status = StandardStatus.Normal;
         
         public event DataStoreItemEventHandler ItemChanged;
+        public event DataStoreItemEventHandler ItemDeleted;
+
+        public StandardStatus Status
+        {
+            get
+            {
+                return this.status;
+            }
+        }
 
         public virtual String LocalOnlyUniqueId
         {
@@ -37,13 +47,12 @@ namespace BL.Data
             set { this.parentType = value; }
         }
 
-        public ItemStatus Status
+        public ItemLocalStatus LocalStatus
         {
             get
             {
-                return this.status;
+                return this.localStatus;
             }
-
         }
 
         protected Dictionary<String, object> Data
@@ -60,6 +69,18 @@ namespace BL.Data
             this.data = new Dictionary<string, object>();
         }
 
+        public void DeleteItem()
+        {
+            this.status = StandardStatus.Deleted;
+            this.localStatus = ItemLocalStatus.Deleted;
+
+            if (this.ItemDeleted != null)
+            {
+                DataStoreItemEventArgs dsiea = new DataStoreItemEventArgs(this);
+
+                this.ItemDeleted(this, dsiea);
+            }
+        }
 
         public static object GetDataObject(IDataStoreItemSet itemSet, IItem item)
         {
@@ -86,9 +107,9 @@ namespace BL.Data
             return this.data[name];
         }
 
-        public void SetStatus(ItemStatus status)
+        public void SetLocalStatus(ItemLocalStatus status)
         {
-            this.status = status;
+            this.localStatus = status;
         }
 
         public String GetValueAsString(String name)
@@ -110,9 +131,9 @@ namespace BL.Data
                 return;
             }
 
-            if (this.status == ItemStatus.Unchanged)
+            if (this.localStatus == ItemLocalStatus.Unchanged)
             {
-                this.status = ItemStatus.Update;
+                this.localStatus = ItemLocalStatus.Update;
             }
 
             this.data[name] = value;
@@ -159,9 +180,9 @@ namespace BL.Data
 
             this.data[name] = value;
 
-            if (this.status == ItemStatus.Unchanged)
+            if (this.localStatus == ItemLocalStatus.Unchanged)
             {
-                this.status = ItemStatus.Update;
+                this.localStatus = ItemLocalStatus.Update;
             }
 
             if (this.ItemChanged != null)
@@ -206,9 +227,9 @@ namespace BL.Data
 
             this.data[name] = value;
 
-            if (this.status == ItemStatus.Unchanged)
+            if (this.localStatus == ItemLocalStatus.Unchanged)
             {
-                this.status = ItemStatus.Update;
+                this.localStatus = ItemLocalStatus.Update;
             }
 
             if (this.ItemChanged != null)
@@ -255,9 +276,9 @@ namespace BL.Data
 
             this.data[name] = value;
 
-            if (this.status == ItemStatus.Unchanged)
+            if (this.localStatus == ItemLocalStatus.Unchanged)
             {
-                this.status = ItemStatus.Update;
+                this.localStatus = ItemLocalStatus.Update;
             }
 
             if (this.ItemChanged != null)
@@ -302,9 +323,9 @@ namespace BL.Data
 
             this.data[name] = value;
 
-            if (this.status == ItemStatus.Unchanged)
+            if (this.localStatus == ItemLocalStatus.Unchanged)
             {
-                this.status = ItemStatus.Update;
+                this.localStatus = ItemLocalStatus.Update;
             }
 
             if (this.ItemChanged != null)
@@ -341,9 +362,9 @@ namespace BL.Data
 
             this.data[name] = value;
 
-            if (this.status == ItemStatus.Unchanged)
+            if (this.localStatus == ItemLocalStatus.Unchanged)
             {
-                this.status = ItemStatus.Update;
+                this.localStatus = ItemLocalStatus.Update;
             }
 
             if (this.ItemChanged != null)

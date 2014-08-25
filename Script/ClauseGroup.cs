@@ -54,6 +54,27 @@ namespace BL.Data
             this.groups = new List<ClauseGroup>();
         }
 
+        public bool ItemMatches(IItem item)
+        {
+            foreach (Clause c in this.clauses)
+            {
+                if (!c.ItemMatches(item))
+                {
+                    return false;
+                }
+            }
+
+            foreach (ClauseGroup cg in this.groups)
+            {
+                if (!cg.ItemMatches(item))
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
         public override string ToString()
         {
             StringBuilder sb = new StringBuilder();

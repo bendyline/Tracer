@@ -10,9 +10,14 @@ namespace BL.Data
     public class EqualsClause : ComparisonClause
     {
 
+        public override bool ItemMatches(IItem item)
+        {
+            return (item.GetStringValue(this.FieldName) == this.Value.ToString());
+        }
+
         public override string ToString()
         {
-            return "{" + this.FieldName + "=" + this.GetStringValue() + "}";
+            return "{" + this.FieldName + "=" + this.Value.ToString() + "}";
         }
     }
 }

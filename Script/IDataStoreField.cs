@@ -14,7 +14,7 @@ namespace BL.Data
         String DisplayName { get; }
         String Name { get; }
         FieldType Type { get; }
-        FieldUserInterfaceType UserInterfaceType { get; }
-        FieldUserInterfaceOptions UserInterfaceOptions { get; set;  }
+        FieldInterfaceType InterfaceType { get; }
+        FieldInterfaceTypeOptions InterfaceTypeOptions { get; set;  }
     }
 }

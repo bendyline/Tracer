@@ -18,6 +18,8 @@ namespace BL.Data
         private String entitySetName;
         private String keyFieldId;
 
+        private Query validCriteria;
+
         public String KeyFieldId
         {
             get
@@ -27,6 +29,19 @@ namespace BL.Data
             set
             {
                 this.keyFieldId = value;
+            }
+        }
+
+        public Query ValidCriteria
+        {
+            get
+            {
+                return this.validCriteria;
+            }
+
+            set
+            {
+                this.validCriteria = value;
             }
         }
 

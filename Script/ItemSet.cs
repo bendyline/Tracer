@@ -26,6 +26,8 @@ namespace BL.Data
                 newObject[field.Name] = val;
             }
 
+            newObject["LocalOnlyUniqueId"] = item.LocalOnlyUniqueId;
+
             return newObject;
         }
         
@@ -76,8 +78,24 @@ namespace BL.Data
         }
 
         public abstract IItem GetItemById(String id);
+        public abstract IItem GetItemByLocalOnlyUniqueId(String id);
         public abstract void BeginRetrieve(AsyncCallback callback, object state);
         public abstract ICollection<IItem> EndRetrieve(IAsyncResult result);
+
+        public void Clear()
+        {
+            List<IItem> itemsTemp = new List<IItem>();
+
+            foreach (IItem item in this.Items)
+            {
+                itemsTemp.Add(item);
+            }
+
+            foreach (IItem item in itemsTemp)
+            {
+                this.Remove(item);
+            }
+        }
 
         public void Remove(IItem item)
         {

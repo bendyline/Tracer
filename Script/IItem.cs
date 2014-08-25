@@ -8,11 +8,17 @@ namespace BL.Data
     public interface IItem
     {
         event DataStoreItemEventHandler ItemChanged;
+        event DataStoreItemEventHandler ItemDeleted;
 
         string Id { get; }
         string LocalOnlyUniqueId { get;  }
 
+        StandardStatus Status { get;  }
+
         IDataStoreType Type { get; set; }
+
+        void DeleteItem();
+
         object GetValue(String name);
         void SetValue(String name, object value);
         

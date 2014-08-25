@@ -58,12 +58,12 @@
     <CodeAnalysisRuleSet>Properties\FxCop.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="FieldUserInterfaceOptions.cs" />
+    <Compile Include="FieldInterfaceTypeOptions.cs" />
     <Compile Include="LessThanClause.cs" />
     <Compile Include="GreaterThanClause.cs" />
     <Compile Include="FieldChoiceCollection.cs" />
     <Compile Include="FieldChoice.cs" />
-    <Compile Include="FieldUserInterfaceType.cs" />
+    <Compile Include="FieldInterfaceType.cs" />
     <Compile Include="StandaloneItem.cs" />
     <Compile Include="Item.cs" />
     <Compile Include="Native\OData.cs" />
@@ -74,6 +74,7 @@
     <Compile Include="StandaloneItemSet.cs" />
     <Compile Include="ODataItemSet.cs" />
     <Compile Include="ODataStore.cs" />
+    <Compile Include="StandardStatus.cs" />
     <Compile Include="SyncItemFile.cs" />
     <None Include="packages.config" />
     <None Include="Properties\FxCop.ruleset" />

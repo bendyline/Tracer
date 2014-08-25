@@ -12,6 +12,7 @@ namespace BL.Data
     {
         private List<IItem> items;
         private Dictionary<String, IItem> itemsById;
+        private Dictionary<String, IItem> itemsByLocalOnlyUniqueId;
 
         private IDataStoreType entity;
 
@@ -57,6 +58,7 @@ namespace BL.Data
             this.entity = (ODataEntityType)list;
 
             this.itemsById = new Dictionary<string, IItem>();
+            this.itemsByLocalOnlyUniqueId = new Dictionary<string, IItem>();
             this.items = new List<IItem>();
         }
 
@@ -68,11 +70,26 @@ namespace BL.Data
 
             item.SetId((-this.newItemsCreated).ToString());
 
-            item.SetStatus(ItemStatus.NewItem);
+            item.SetLocalStatus(ItemLocalStatus.NewItem);
 
             this.Add(item);
 
             return item;
+        }
+
+        public void Clear()
+        {
+            List<IItem> itemsTemp = new List<IItem>();
+
+            foreach (IItem item in this.Items)
+            {
+                itemsTemp.Add(item);
+            }
+
+            foreach (IItem item in itemsTemp)
+            {
+                this.Remove(item);
+            }
         }
 
         public virtual void Add(IItem item)
@@ -89,6 +106,7 @@ namespace BL.Data
                 return;
             }
 
+            this.itemsByLocalOnlyUniqueId[item.LocalOnlyUniqueId] = item;
             this.itemsById[item.Id] = item;
             this.Items.Add(item);
         }
@@ -97,11 +115,16 @@ namespace BL.Data
         {
             if (this.Items.Contains(item))
             {
+                this.itemsByLocalOnlyUniqueId.Remove(item.LocalOnlyUniqueId);
                 this.itemsById.Remove(item.Id);
                 this.Items.Remove(item);
             }
         }
 
+        public IItem GetItemByLocalOnlyUniqueId(String id)
+        {
+            return this.itemsByLocalOnlyUniqueId[id];
+        }
 
         public IItem GetItemById(String id)
         {

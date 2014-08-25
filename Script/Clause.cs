@@ -9,5 +9,10 @@ namespace BL.Data
 {
     public class Clause
     {
+
+        public virtual bool ItemMatches(IItem item)
+        {
+            return false;
+        }
     }
 }

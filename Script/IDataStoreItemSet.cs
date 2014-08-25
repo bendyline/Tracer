@@ -33,11 +33,14 @@ namespace BL.Data
         event DataStoreItemEventHandler ItemInSetChanged;
 
         IItem GetItemById(String id);
+        IItem GetItemByLocalOnlyUniqueId(String id);
 
         void BeginRetrieve(AsyncCallback callback, object state);
 
         void Add(IItem item);
 
         void Remove(IItem item);
+
+        void Clear();
     }
 }

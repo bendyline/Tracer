@@ -70,6 +70,21 @@ namespace BL.Data
             }
         }
 
+        public bool IsValid
+        {
+            get
+            {
+                Query validCriteria = ((ODataEntityType)this.Type).ValidCriteria;
+
+                if (validCriteria == null)
+                {
+                    return true;
+                }
+
+                return validCriteria.ItemMatches(this);
+            }
+        }
+
         public ODataEntity(ODataEntityType entityType) : base(entityType)
         {
             
@@ -132,7 +147,7 @@ namespace BL.Data
 
             bool isNew = false;
 
-            if (this.Status == ItemStatus.Unchanged)
+            if (this.LocalStatus == ItemLocalStatus.Unchanged)
             {
                 if (callback != null)
                 {
@@ -166,7 +181,7 @@ namespace BL.Data
 
             XmlHttpRequest xhr = new XmlHttpRequest();
 
-            if (this.Status == ItemStatus.Update)
+            if (this.LocalStatus == ItemLocalStatus.Update)
             {
                 xhr.Open("PUT", endpoint + "(" + this.Id + "L)");
             }
@@ -187,11 +202,11 @@ namespace BL.Data
         {
             if (this.saveRequest != null && this.saveRequest.ReadyState == ReadyState.Loaded)
             {
-                ItemStatus previousStatus = this.Status;
+                ItemLocalStatus previousStatus = this.LocalStatus;
 
                 if (this.saveRequest.Status < 400)
                 {
-                    this.SetStatus(ItemStatus.Unchanged);
+                    this.SetLocalStatus(ItemLocalStatus.Unchanged);
 
                     String responseContent = this.saveRequest.ResponseText;
 

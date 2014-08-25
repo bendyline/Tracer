@@ -5,7 +5,7 @@ using System;
 
 namespace BL.Data
 {
-    public enum FieldUserInterfaceType
+    public enum FieldInterfaceType
     {
         TypeDefault = 0,
         User = 1,

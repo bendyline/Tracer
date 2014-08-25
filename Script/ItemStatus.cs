@@ -5,10 +5,11 @@ using System;
 
 namespace BL.Data
 {
-    public enum ItemStatus
+    public enum ItemLocalStatus
     {
         NewItem = 0,
         Update = 1,
-        Unchanged = 2
+        Unchanged = 2,
+        Deleted = 3
     }
 }

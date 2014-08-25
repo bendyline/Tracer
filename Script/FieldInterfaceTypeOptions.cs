@@ -16,7 +16,7 @@ namespace BL.Data
         FiveAgree = 3
     }
 
-    public class FieldUserInterfaceOptions : SerializableObject
+    public class FieldInterfaceTypeOptions : SerializableObject
     {
         private String rangeStartDescription;
         private String rangeEndDescription;
@@ -129,12 +129,12 @@ namespace BL.Data
             }
         }
 
-        public FieldUserInterfaceOptions()
+        public FieldInterfaceTypeOptions()
         {
 
         }
 
-        public virtual bool IsEqualTo(FieldUserInterfaceOptions fuio)
+        public virtual bool IsEqualTo(FieldInterfaceTypeOptions fuio)
         {
             if (this.Placeholder != fuio.Placeholder)
             {

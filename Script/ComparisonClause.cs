@@ -41,7 +41,7 @@ namespace BL.Data
             }
         }
 
-        protected String GetStringValue()
+        protected String GetJsonStringValue()
         {
             if (value is String)
             {

@@ -15,5 +15,6 @@ namespace BL.Data
         Geopoint = 6,
         BigNumber = 7,
         BoolChoice = 8,
+        Unknown = -1
     }
 }

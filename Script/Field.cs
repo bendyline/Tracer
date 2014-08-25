@@ -14,8 +14,8 @@ namespace BL.Data
         private String displayName;
         private bool required;
         private FieldType fieldType;
-        private FieldUserInterfaceType userInterfaceType;
-        private FieldUserInterfaceOptions userInterfaceOptions;
+        private FieldInterfaceType interfaceType;
+        private FieldInterfaceTypeOptions interfaceTypeOptions;
         private FieldChoiceCollection fieldChoices;
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -34,29 +34,29 @@ namespace BL.Data
             }
         }
 
-        [ScriptName("o_userInterfaceOptions")]
-        public FieldUserInterfaceOptions UserInterfaceOptions
+        [ScriptName("o_interfaceTypeOptions")]
+        public FieldInterfaceTypeOptions InterfaceTypeOptions
         {
             get
             {
-                if (this.userInterfaceOptions == null)
+                if (this.interfaceTypeOptions == null)
                 {
-                    this.userInterfaceOptions = new FieldUserInterfaceOptions();
+                    this.interfaceTypeOptions = new FieldInterfaceTypeOptions();
                 }
 
-                return this.userInterfaceOptions;
+                return this.interfaceTypeOptions;
             }
 
             set
             {
-                if (this.userInterfaceOptions == value)
+                if (this.interfaceTypeOptions == value)
                 {
                     return;
                 }
 
-                this.userInterfaceOptions = value;
+                this.interfaceTypeOptions = value;
 
-                this.NotifyPropertyChanged("UserInterfaceOptions");
+                this.NotifyPropertyChanged("InterfaceTypeOptions");
             }
         }
 
@@ -115,22 +115,22 @@ namespace BL.Data
             }
         }
 
-        public FieldUserInterfaceType UserInterfaceType
+        public FieldInterfaceType InterfaceType
         {
             get
             {
-                return this.userInterfaceType;
+                return this.interfaceType;
             }
             set
             {
-                if (this.userInterfaceType == value)
+                if (this.interfaceType == value)
                 {
                     return;
                 }
 
-                this.userInterfaceType = value;
+                this.interfaceType = value;
 
-                this.NotifyPropertyChanged("UserInterfaceType");
+                this.NotifyPropertyChanged("InterfaceType");
             }
         } 
 

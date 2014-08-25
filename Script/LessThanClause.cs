@@ -9,10 +9,21 @@ namespace BL.Data
 {
     public class LessThanClause : ComparisonClause
     {
+        public override bool ItemMatches(IItem item)
+        {
+            IDataStoreField field = item.Type.GetField(this.FieldName);
+
+            if (field.Type == FieldType.BigInteger || field.Type == FieldType.Integer)
+            {
+                return item.GetInt32Value(this.FieldName) > (Int32)this.Value;
+            }
+
+            return (item.GetStringValue(this.FieldName) == this.Value.ToString());
+        }
 
         public override string ToString()
         {
-            return "{" + this.FieldName + "<" + this.GetStringValue() + "}";
+            return "{" + this.FieldName + "<" + this.GetJsonStringValue() + "}";
         }
     }
 }
