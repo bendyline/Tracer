@@ -27,6 +27,7 @@ namespace BL.Data
         public event DataStoreItemEventHandler ItemInSetChanged;
 
         private ElementEventListener shuttingDownHandler;
+        private DataStoreItemEventHandler itemDeletedHandler;
 
         public bool AutoSave
         {
@@ -97,6 +98,8 @@ namespace BL.Data
             this.itemsByLocalOnlyUniqueId = new Dictionary<string, IItem>();
             this.items = new List<IItem>();
             this.shuttingDownHandler = this.WindowShuttingDown;
+
+            this.itemDeletedHandler = this.item_ItemDeleted;
         }
 
         public IItem Create()
@@ -135,9 +138,35 @@ namespace BL.Data
         {
             return this.itemsById[id];
         }
+
         public IItem GetItemByLocalOnlyUniqueId(String id)
         {
             return this.itemsByLocalOnlyUniqueId[id];
+        }
+
+        private void AddManagersToItem(IItem item)
+        {
+            item.ItemDeleted += this.itemDeletedHandler;
+        }
+
+        private void RemoveManagersFromItem(IItem item)
+        {
+            item.ItemDeleted -= this.itemDeletedHandler;
+        }
+
+        private void item_ItemDeleted(object sender, DataStoreItemEventArgs e)
+        {
+            if (!this.Items.Contains(e.Item))
+            {
+                return;
+            }
+
+            if (this.autoSave)
+            {
+                ((ODataEntity)e.Item).Save(null, null);
+            }
+
+            this.Remove(e.Item);
         }
 
         private String GetODataQueryString()
@@ -218,6 +247,8 @@ namespace BL.Data
             this.itemsByLocalOnlyUniqueId[item.LocalOnlyUniqueId] = item;
             this.itemsById[item.Id] = item;
             this.Items.Add(item);
+
+            this.AddManagersToItem(item);
 
             item.ItemChanged += item_ItemChanged;
 
@@ -366,6 +397,8 @@ this.add(newe);
         {
             if (this.Items.Contains(item))
             {
+                this.RemoveManagersFromItem(item);
+
                 this.itemsByLocalOnlyUniqueId.Remove(item.LocalOnlyUniqueId);
                 this.itemsById.Remove(item.Id);
                 this.Items.Remove(item);
