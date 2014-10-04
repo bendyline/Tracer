@@ -129,6 +129,14 @@ namespace BL.Data
             }
         }
 
+        public bool IsDefined
+        {
+            get
+            {
+                return this.placeholder != null || this.rangeEndDescription != null || this.rangeStartDescription != null || this.displayKey != null;
+            }
+        }
+
         public FieldInterfaceTypeOptions()
         {
 

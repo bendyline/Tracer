@@ -159,6 +159,11 @@ namespace BL.Data
                     callback(cr);
                 }
 
+                if (this.Saved != null)
+                {
+                    this.Saved(this, EventArgs.Empty);
+                }
+
                 return;
             }
 
@@ -234,8 +239,7 @@ namespace BL.Data
                 if ({2}==0 && oc[""Id""] !=null)
                 {{
                     this.setId(oc[""Id""]);
-                }}
-    
+                }}    
 ", results, this.Type.Fields, previousStatus);
                     }
                 }
@@ -245,7 +249,6 @@ namespace BL.Data
                     this.Saved(this, EventArgs.Empty);
                 }
                 
-
                 this.saveOperation.CompleteAsAsyncDone(this);
 
                 this.saveOperation = null;
