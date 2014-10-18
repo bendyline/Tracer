@@ -136,6 +136,17 @@ namespace BL.Data
                 this.localStatus = ItemLocalStatus.Update;
             }
 
+            // attempt to canonicalize storage of data values.
+            IDataStoreField fi = this.Type.GetField(name);
+
+            if (fi != null)
+            {
+                if ((fi.Type == FieldType.Integer || fi.Type == FieldType.BigInteger) && value is String)
+                {
+                    value = Int32.Parse((String)value);
+                }
+            }
+
             this.data[name] = value;
 
             if (this.ItemChanged != null)

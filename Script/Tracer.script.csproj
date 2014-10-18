@@ -83,7 +83,7 @@
     <Compile Include="FileManager.cs" />
     <Compile Include="Folder.cs" />
     <Compile Include="IPersistenceAdapter.cs" />
-    <Compile Include="ItemStatus.cs" />
+    <Compile Include="ItemLocalStatus.cs" />
     <Compile Include="DataStore.cs" />
     <Compile Include="Clause.cs" />
     <Compile Include="ClauseGroup.cs" />

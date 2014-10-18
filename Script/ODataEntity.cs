@@ -14,6 +14,8 @@ namespace BL.Data
         private string id;
         private bool disconnected = false;
         private XmlHttpRequest saveRequest;
+        private String activeSaveJson = null;
+        private bool additionalSaveNeeded = false;
 
         public event EventHandler Saved;
         private Operation saveOperation;
@@ -41,11 +43,6 @@ namespace BL.Data
                 }
 
                 return this.saveOperation;
-            }
-
-            set
-            {
-                this.saveOperation = value;
             }
         }
 
@@ -175,18 +172,29 @@ namespace BL.Data
 
             this.saveOperation.AddCallback(callback, state);
 
+            String json = GetJson();
+
             if (!isNew)
             {
+                if (json != this.activeSaveJson)
+                {
+                    this.additionalSaveNeeded = true;
+                }
+
                 return;
             }
 
-            String endpoint = ((ODataEntityType)this.Type).Url;
+            this.activeSaveJson = json;
+            this.SendSaveRequest();
+        }
 
-            String json = GetJson();
+        private void SendSaveRequest()
+        {
+            String endpoint = ((ODataEntityType)this.Type).Url;
 
             XmlHttpRequest xhr = new XmlHttpRequest();
 
-            if (this.LocalStatus == ItemLocalStatus.Update)
+            if (this.LocalStatus == ItemLocalStatus.Update || this.LocalStatus == ItemLocalStatus.Deleted)
             {
                 xhr.Open("PUT", endpoint + "(" + this.Id + "L)");
             }
@@ -197,10 +205,11 @@ namespace BL.Data
             xhr.SetRequestHeader("Accept", "application/json;odata=minimalmetadata");
             xhr.SetRequestHeader("Content-Type", "application/json");
 //            xhr.SetRequestHeader("DataServiceVersion", "DataServiceVersion: 3.0;NetFx");
-            xhr.Send(json);
             xhr.OnReadyStateChange = new Action(this.HandleSaveComplete);
 
             this.saveRequest = xhr;
+
+            xhr.Send(this.activeSaveJson);
         }
 
         private void HandleSaveComplete()
@@ -211,8 +220,6 @@ namespace BL.Data
 
                 if (this.saveRequest.Status < 400)
                 {
-                    this.SetLocalStatus(ItemLocalStatus.Unchanged);
-
                     String responseContent = this.saveRequest.ResponseText;
 
                     if (!String.IsNullOrEmpty(responseContent))
@@ -244,14 +251,27 @@ namespace BL.Data
                     }
                 }
 
-                if (this.Saved != null)
-                {
-                    this.Saved(this, EventArgs.Empty);
-                }
-                
-                this.saveOperation.CompleteAsAsyncDone(this);
+                this.saveRequest = null;
 
-                this.saveOperation = null;
+                if (this.additionalSaveNeeded)
+                {
+                    this.additionalSaveNeeded = false;
+                    this.activeSaveJson = this.GetJson();
+                    this.SendSaveRequest();
+                }
+                else
+                {
+                    this.SetLocalStatus(ItemLocalStatus.Unchanged);
+
+                    if (this.Saved != null)
+                    {
+                        this.Saved(this, EventArgs.Empty);
+                    }
+
+                    this.saveOperation.CompleteAsAsyncDone(this);
+
+                    this.saveOperation = null;
+                }
             }
         }
     }
