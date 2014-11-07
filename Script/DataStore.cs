@@ -30,7 +30,7 @@ namespace BL.Data
             switch (type)
             {
                 case DataStoreType.SharePoint:
-                    Script.Literal("store = new BL.SP.Web();");
+                    Script.Literal("{0}= new BL.SP.Web();",store);
                     break;
              }
 

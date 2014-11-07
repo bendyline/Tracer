@@ -20,6 +20,14 @@ namespace BL.Data
         public event EventHandler Saved;
         private Operation saveOperation;
 
+        public bool IsSaving
+        {
+            get
+            {
+                return this.saveOperation != null;
+            }
+        }
+
         public bool Disconnected
         {
             get
@@ -146,15 +154,7 @@ namespace BL.Data
 
             if (this.LocalStatus == ItemLocalStatus.Unchanged)
             {
-                if (callback != null)
-                {
-                    CallbackResult cr = new CallbackResult();
-                    cr.AsyncState = state;
-                    cr.Data = this;
-                    cr.CompletedSynchronously = true;
-
-                    callback(cr);
-                }
+                CallbackResult.NotifySynchronousSuccess(callback, state, this);
 
                 if (this.Saved != null)
                 {
@@ -268,9 +268,12 @@ namespace BL.Data
                         this.Saved(this, EventArgs.Empty);
                     }
 
-                    this.saveOperation.CompleteAsAsyncDone(this);
+                    Operation o = this.saveOperation;
 
                     this.saveOperation = null;
+
+                    o.CompleteAsAsyncDone(this);
+
                 }
             }
         }

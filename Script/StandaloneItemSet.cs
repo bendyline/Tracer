@@ -133,17 +133,7 @@ namespace BL.Data
 
         public void BeginRetrieve(AsyncCallback callback, object state)
         {
-           if (callback != null)
-           {
-               CallbackResult cr = new CallbackResult();
-
-               cr.AsyncState = state;
-               cr.Data = this;
-               cr.IsCompleted = true;
-               cr.CompletedSynchronously = true;
-
-               callback(cr);
-           }
+            CallbackResult.NotifySynchronousSuccess(callback, state, this);
         }
         
     }

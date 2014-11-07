@@ -22,12 +22,31 @@ namespace BL.Data
         private bool isRetrieved = false;
         private bool autoSave = false;
         private bool autoSavePending = false;
+        private bool isSaving = false;
 
         public event DataStoreItemSetEventHandler ItemSetChanged;
         public event DataStoreItemEventHandler ItemInSetChanged;
 
+        public event DataStoreItemSetEventHandler SaveStateChanged;
+
         private ElementEventListener shuttingDownHandler;
         private DataStoreItemEventHandler itemDeletedHandler;
+
+        public bool IsSaving
+        {
+            get
+            {
+                foreach (ODataEntity ode in this.items)
+                {
+                    if (ode.IsSaving)
+                    {
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+        }
 
         public bool AutoSave
         {
@@ -283,8 +302,19 @@ namespace BL.Data
             if (!this.autoSavePending)
             {
                 this.autoSavePending = true;
+                this.FireSaveStateChanged();
 
                 Window.SetTimeout(this.AutoSaveUpdate, 3000);
+            }
+        }
+
+        private void FireSaveStateChanged()
+        {
+            if (this.SaveStateChanged != null)
+            {
+                DataStoreItemSetEventArgs dsiea = new DataStoreItemSetEventArgs(this);
+
+                this.SaveStateChanged(this, dsiea);
             }
         }
 
@@ -306,25 +336,25 @@ namespace BL.Data
 
                 if (!ode.Disconnected && ode.IsValid)
                 {
-                    ode.Save(null, null);
+                    this.isSaving = true;
+                    ode.Save(this.SaveComplete, null);
                 }
             }
+
+            this.FireSaveStateChanged();
+        }
+        private void SaveComplete(IAsyncResult result)
+        {
+            this.isSaving = false;
+
+            this.FireSaveStateChanged();
         }
 
         public void BeginRetrieve(AsyncCallback callback, object state)
         {
             if (this.isRetrieved)
             {
-                if (callback != null)
-                {
-                    CallbackResult cr = new CallbackResult();
-                    cr.Data = this;
-                    cr.AsyncState = state;
-                    cr.CompletedSynchronously = true;
-                    cr.IsCompleted = true;
-
-                    callback(cr);
-                }
+                CallbackResult.NotifySynchronousSuccess(callback, state, this);
 
                 return;
             }
