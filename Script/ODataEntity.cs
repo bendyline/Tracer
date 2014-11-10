@@ -17,6 +17,7 @@ namespace BL.Data
         private String activeSaveJson = null;
         private bool additionalSaveNeeded = false;
 
+        public event EventHandler Saving;
         public event EventHandler Saved;
         private Operation saveOperation;
 
@@ -182,6 +183,11 @@ namespace BL.Data
                 }
 
                 return;
+            }
+
+            if (this.Saving != null)
+            {
+                this.Saving(this, EventArgs.Empty);
             }
 
             this.activeSaveJson = json;

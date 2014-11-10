@@ -20,6 +20,26 @@ namespace BL.Data
 
         public event DataStoreItemSetEventHandler ItemSetChanged;
         public event DataStoreItemEventHandler ItemInSetChanged;
+        public event DataStoreItemSetEventHandler SaveStateChanged;
+
+
+        public bool IsSaving
+        {
+            get
+            {
+                return false;
+            }
+        }
+
+        public bool NeedsSaving
+        {
+            get
+            {
+ 
+                return false;
+            }
+        }
+         
 
         public IItem FirstItem
         {

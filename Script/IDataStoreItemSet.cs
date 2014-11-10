@@ -19,6 +19,17 @@ namespace BL.Data
             get;
         }
 
+        bool NeedsSaving
+        {
+            get;
+        }
+
+
+        bool IsSaving
+        {
+            get;
+        }
+
         IDataStoreType Type
         {
             get;
@@ -31,6 +42,7 @@ namespace BL.Data
 
         event DataStoreItemSetEventHandler ItemSetChanged;
         event DataStoreItemEventHandler ItemInSetChanged;
+        event DataStoreItemSetEventHandler SaveStateChanged;
 
         IItem GetItemById(String id);
         IItem GetItemByLocalOnlyUniqueId(String id);

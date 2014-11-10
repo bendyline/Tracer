@@ -14,38 +14,23 @@ namespace BL.Data
 
         public event DataStoreItemSetEventHandler ItemSetChanged;
         public event DataStoreItemEventHandler ItemInSetChanged;
+        public event DataStoreItemSetEventHandler SaveStateChanged;
 
-        public static object GetDataObject(IDataStoreItemSet itemSet, IItem item)
+        public bool IsSaving
         {
-            Dictionary<String, object> newObject = new Dictionary<string, object>();
-
-            foreach (IDataStoreField field in itemSet.Type.Fields)
+            get
             {
-                object val = item.GetValue(field.Name);
-
-                newObject[field.Name] = val;
-            }
-
-            newObject["LocalOnlyUniqueId"] = item.LocalOnlyUniqueId;
-
-            return newObject;
-        }
-        
-        public static void SetDataObject(IDataStoreItemSet itemSet, IItem item, object data)
-        {
-            foreach (IDataStoreField field in itemSet.Type.Fields)
-            {
-                object newValue = null;
-
-                Script.Literal("if ({1}[{2}] != null) {{{0}={1}[{2}];}}", newValue, data, field.Name);
-
-                if (newValue != null)
-                {
-                    item.SetValue(field.Name, newValue);
-                }
+                return this.IsSaving;
             }
         }
 
+        public bool NeedsSaving
+        {
+            get
+            {
+                return false;
+            }
+        }
         public IItem FirstItem
         {
             get
@@ -76,6 +61,38 @@ namespace BL.Data
             this.list = list;
             this.query = query;
         }
+
+        public static object GetDataObject(IDataStoreItemSet itemSet, IItem item)
+        {
+            Dictionary<String, object> newObject = new Dictionary<string, object>();
+
+            foreach (IDataStoreField field in itemSet.Type.Fields)
+            {
+                object val = item.GetValue(field.Name);
+
+                newObject[field.Name] = val;
+            }
+
+            newObject["LocalOnlyUniqueId"] = item.LocalOnlyUniqueId;
+
+            return newObject;
+        }
+
+        public static void SetDataObject(IDataStoreItemSet itemSet, IItem item, object data)
+        {
+            foreach (IDataStoreField field in itemSet.Type.Fields)
+            {
+                object newValue = null;
+
+                Script.Literal("if ({1}[{2}] != null) {{{0}={1}[{2}];}}", newValue, data, field.Name);
+
+                if (newValue != null)
+                {
+                    item.SetValue(field.Name, newValue);
+                }
+            }
+        }
+
 
         public abstract IItem GetItemById(String id);
         public abstract IItem GetItemByLocalOnlyUniqueId(String id);

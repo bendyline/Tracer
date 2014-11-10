@@ -21,7 +21,7 @@ namespace BL.Data
         private String rangeStartDescription;
         private String rangeEndDescription;
         private String placeholder;
-        private ScaleType scaleType = ScaleType.FiveValues;
+        private Nullable<ScaleType> scaleType = null;
         private bool displayKey = false;
 
         [ScriptName("b_displayKey")]
@@ -46,7 +46,7 @@ namespace BL.Data
         }
 
         [ScriptName("i_scaleType")]
-        public ScaleType ScaleType
+        public Nullable<ScaleType> ScaleType
         {
             get
             {

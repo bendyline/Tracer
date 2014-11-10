@@ -48,6 +48,22 @@ namespace BL.Data
             }
         }
 
+        public bool NeedsSaving
+        {
+            get
+            {
+                foreach (ODataEntity ode in this.items)
+                {
+                    if (ode.LocalStatus == ItemLocalStatus.NewItem || ode.LocalStatus == ItemLocalStatus.Update)
+                    {
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+        }
+
         public bool AutoSave
         {
             get
@@ -166,6 +182,12 @@ namespace BL.Data
         private void AddManagersToItem(IItem item)
         {
             item.ItemDeleted += this.itemDeletedHandler;
+            ((ODataEntity)item).Saving += ODataItemSet_Saving;
+        }
+
+        private void ODataItemSet_Saving(object sender, EventArgs e)
+        {
+            this.FireSaveStateChanged();
         }
 
         private void RemoveManagersFromItem(IItem item)
@@ -302,6 +324,7 @@ namespace BL.Data
             if (!this.autoSavePending)
             {
                 this.autoSavePending = true;
+
                 this.FireSaveStateChanged();
 
                 Window.SetTimeout(this.AutoSaveUpdate, 3000);
@@ -334,15 +357,17 @@ namespace BL.Data
             {
                 ODataEntity ode = (ODataEntity)item;
 
-                if (!ode.Disconnected && ode.IsValid)
+                if (!ode.Disconnected && ode.IsValid && ode.LocalStatus != ItemLocalStatus.Unchanged)
                 {
                     this.isSaving = true;
                     ode.Save(this.SaveComplete, null);
+                    this.FireSaveStateChanged();
                 }
             }
 
             this.FireSaveStateChanged();
         }
+
         private void SaveComplete(IAsyncResult result)
         {
             this.isSaving = false;
