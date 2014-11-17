@@ -8,7 +8,7 @@ namespace BL.Data
 {
     public class ListFileSyncManager
     {
-        private List list;
+        private ItemType list;
         private FileManager fileManager;
         private String clientId;
         private Folder folder;
@@ -39,7 +39,7 @@ namespace BL.Data
             }
         }
 
-        public List List
+        public ItemType List
         {
             get
             {

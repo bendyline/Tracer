@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace BL.Data
 {
-    public abstract class Item : IItem
+    public class Item : IItem
     {
         private Dictionary<String, object> data;
         private ItemLocalStatus localStatus = ItemLocalStatus.Unchanged;
@@ -24,6 +24,23 @@ namespace BL.Data
             }
         }
 
+        public object Data
+        {
+            get
+            {
+                object result = null;
+
+                Script.Literal("{0}={1}", result, this.data);
+
+                return result;
+            }
+
+            set
+            {
+                Script.Literal("{0}={1}", this.data, value);
+            }
+        }
+
         public virtual String LocalOnlyUniqueId
         {
             get
@@ -37,7 +54,13 @@ namespace BL.Data
             }
         }
 
-        public abstract String Id { get;  }
+        public virtual String Id 
+        { 
+            get
+            {
+                return (String)this.data["Id"];
+            }
+        }
 
         private IDataStoreType parentType;
 
@@ -55,17 +78,10 @@ namespace BL.Data
             }
         }
 
-        protected Dictionary<String, object> Data
+        public Item(IDataStoreType itemType)
         {
-            get
-            {
-                return this.data;
-            }
-        }
+            this.parentType = itemType;
 
-        public Item(IDataStoreType list)
-        {
-            this.parentType = list;
             this.data = new Dictionary<string, object>();
         }
 

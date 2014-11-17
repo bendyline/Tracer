@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace BL.Data
 {
-    public class List : IDataStoreType
+    public class ItemType : IDataStoreType
     {
         private String name;
         private List<IDataStoreField> fields;
@@ -64,7 +64,7 @@ namespace BL.Data
             }
         }
 
-        public List()
+        public ItemType()
         {
             this.fields = new List<IDataStoreField>();
             this.fieldsByName = new Dictionary<string, IDataStoreField>();
