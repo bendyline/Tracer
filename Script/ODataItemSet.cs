@@ -148,6 +148,9 @@ namespace BL.Data
             item.SetId((-store.NewItemsCreated).ToString());
 
             item.SetLocalStatus(ItemLocalStatus.NewItem);
+            item.SetCreatedDateTime(Date.Now);
+            item.SetModifiedDateTime(item.CreatedDateTime);
+;
 
             this.Add(item);
 
@@ -167,6 +170,11 @@ namespace BL.Data
             {
                 this.Remove(item);
             }
+        }
+
+        public List<IItem> GetSortedItems(ItemSetSort sort, String fieldName)
+        {
+            return ItemSet.GetSortedItemList(this.Items, sort, fieldName);
         }
 
         public IItem GetItemById(String id)
@@ -431,12 +439,22 @@ namespace BL.Data
                         {{
                             var fi = fieldarr[j];
                             var fiName = fi.get_name();
+                            var fiNameL = fiName.toLowerCase();
 
                             var val = oc[fi.get_name()];
 
                             if (val != null)
                             {{
                                 newe.setValue(fiName, val);
+                            }}
+
+                            if (fiNameL == ""createddate"")
+                            {{
+                                newe.setCreatedDateTime(newe.getValue(fiName));
+                            }}
+                            else if (fiNameL == ""modifieddate"")
+                            {{
+                                newe.setModifiedDateTime(newe.getValue(fiName));
                             }}
                         }}
 newe.setLocalStatus(2);

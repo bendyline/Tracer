@@ -10,6 +10,15 @@ namespace BL.Data
         event DataStoreItemEventHandler ItemChanged;
         event DataStoreItemEventHandler ItemDeleted;
 
+        Date CreatedDateTime { get; }
+        
+        Date ModifiedDateTime { get; }
+
+        String CreatedUserId { get; }
+
+        String ModifiedUserId { get; }
+
+
         string Id { get; }
         string LocalOnlyUniqueId { get;  }
 
@@ -33,5 +42,7 @@ namespace BL.Data
 
         Date GetDateValue(String name);
         void SetDateValue(String name, Date value);
+
+        int CompareTo(IItem item, ItemSetSort sort, String fieldName);
     }
 }

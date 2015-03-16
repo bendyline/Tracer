@@ -110,7 +110,7 @@ namespace BL.Data
          
             foreach (Field f in this.Type.Fields)
             {
-                if (f.Name != "Id")
+                if (f.Name != "Id" && f.Name != "CreatedDate" && f.Name != "ModifiedDate")
                 {
                     String value = this.GetStringValue(f.Name);
 
@@ -130,6 +130,10 @@ namespace BL.Data
                         else if (f.Type == FieldType.Integer || f.Type == FieldType.Geopoint || f.Type == FieldType.BigNumber)
                         {
                             result.Append(",\"" + f.Name + "\":" + value);
+                        }
+                        else if (f.Type == FieldType.DateTime)
+                        {
+                            result.Append(",\"" + f.Name + "\":\"" + value + "\"");
                         }
                         else
                         {

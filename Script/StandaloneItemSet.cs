@@ -81,6 +81,10 @@ namespace BL.Data
             this.itemsByLocalOnlyUniqueId = new Dictionary<string, IItem>();
             this.items = new List<IItem>();
         }
+        public List<IItem> GetSortedItems(ItemSetSort sort, String fieldName)
+        {
+            return ItemSet.GetSortedItemList(this.Items, sort, fieldName);
+        }
 
         public IItem Create()
         {

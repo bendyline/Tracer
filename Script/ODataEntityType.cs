@@ -139,7 +139,9 @@ namespace BL.Data
             ODataEntity item = new ODataEntity(this);
 
             item.Disconnected = true;
-
+            item.SetCreatedDateTime(Date.Now);
+            item.SetModifiedDateTime(item.CreatedDateTime);
+;
             return item;
         }
 

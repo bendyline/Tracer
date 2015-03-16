@@ -1,6 +1,7 @@
 ﻿/* Copyright (c) Bendyline LLC. All rights reserved. Licensed under the Apache License, Version 2.0.
     You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0. */
 
+using Bendyline.Base;
 using System;
 using System.Collections.Generic;
 
@@ -12,9 +13,48 @@ namespace BL.Data
         private ItemLocalStatus localStatus = ItemLocalStatus.Unchanged;
         private String localOnlyUniqueId;
         private StandardStatus status = StandardStatus.Normal;
+
+        private Date createdDateTime;
+        private Date modifiedDateTime;
+        private String modifiedUserId;
+        private String createdUserId;
         
         public event DataStoreItemEventHandler ItemChanged;
         public event DataStoreItemEventHandler ItemDeleted;
+
+
+        public Date CreatedDateTime 
+        { 
+            get
+            {
+                return this.createdDateTime;
+            }
+        }
+
+        public Date ModifiedDateTime 
+        { 
+            get
+            {
+                return this.modifiedDateTime;
+            }
+        }
+
+        public String CreatedUserId 
+        { 
+            get
+            {
+                return this.createdUserId;
+            }
+        }
+
+        public String ModifiedUserId 
+        { 
+            get
+            {
+                return this.modifiedUserId;
+            }
+        }
+
 
         public StandardStatus Status
         {
@@ -98,10 +138,251 @@ namespace BL.Data
             }
         }
 
+        public void SetCreatedDateTime(Date dateTime)
+        {
+            this.createdDateTime = dateTime;
+        }
+
+        public void SetModifiedDateTime(Date dateTime)
+        {
+            this.modifiedDateTime = dateTime;
+        }
+
+        public void SetCreatedUserId(String userId)
+        {
+            this.createdUserId = userId;
+        }
+
+        public void SetModifiedUserId(String userId)
+        {
+            this.modifiedUserId = userId;
+        }
+
+        public int CompareTo(IItem item, ItemSetSort sort, String fieldName)
+        {
+            return CompareItems(this, item, sort, fieldName);
+        }
+
+        public static int CompareItems(IItem itemA, IItem itemB, ItemSetSort sort, String fieldName)
+        {
+            if (sort == ItemSetSort.None)
+            {
+                return 0;
+            }
+
+            if (sort == ItemSetSort.CreatedDateAscending)
+            {
+                return CompareItemsByModifiedDateAscending(itemA, itemB);
+            }
+            else if (sort == ItemSetSort.CreatedDateDescending)
+            {
+                return CompareItemsByCreatedDateDescending(itemA, itemB);
+            }
+            else if (sort == ItemSetSort.ModifiedDateDescending)
+            {
+                return CompareItemsByModifiedDateDescending(itemA, itemB);
+            }
+            else if (sort == ItemSetSort.ModifiedDateAscending)
+            {
+                return CompareItemsByModifiedDateAscending(itemA, itemB);
+            }
+            else if (sort == ItemSetSort.FieldAscending)
+            {
+                return CompareItemsByFieldAscending(itemA, itemB, fieldName);
+            }
+            else if (sort == ItemSetSort.FieldDescending)
+            {
+                return CompareItemsByFieldDescending(itemA, itemB, fieldName);
+            }
+
+            return 0;
+        }
+
         public static object GetDataObject(IDataStoreItemSet itemSet, IItem item)
         {
             return ItemSet.GetDataObject(itemSet, item);
         }
+
+        public static int CompareItemsByFieldDescending(IItem itemA, IItem itemB, String fieldName)
+        {
+            return -CompareItemsByFieldAscending(itemA, itemB, fieldName);
+        }
+
+        public static int CompareItemsByFieldAscending(IItem itemA, IItem itemB, String fieldName)
+        {
+            object valA = itemA.GetValue(fieldName);
+            object valB = itemB.GetValue(fieldName);
+
+            if (valA == null && valB == null)
+            {
+                return 0;
+            }
+
+            if (valA == null && valB != null)
+            {
+                return 1;
+            }
+
+            if (valA != null && valB == null)
+            {
+                return -1;
+            }
+
+            if (valA is String && valB is String)
+            {
+                return ((String)valA).CompareTo((String)valB);
+            }
+
+            if (valA is Date && valB is Date)
+            {
+                return ((Date)valA).GetTime() - ((Date)valB).GetTime();
+            }
+
+            if (valA is Int32 && valB is Int32)
+            {
+                return ((Int32)valB) - ((Int32)valA);
+            }
+
+            if (valA is Int64 && valB is Int64)
+            {
+                Int64 intA = (Int64)valA;
+                Int64 intB = (Int64)valB;
+
+                if (intA == intB)
+                {
+                    return 0;
+                }
+                else if (intA > intB)
+                {
+                    return -1;
+                }
+                else
+                {
+                    return 1;
+                }
+            }
+            
+            if (valA is double && valB is double)
+            {
+                double doubleA = (double)valA;
+                double doubleB = (double)valB;
+
+                if (doubleA == doubleB)
+                {
+                    return 0;
+                }
+                else if (doubleA > doubleB)
+                {
+                    return -1;
+                }
+                else
+                {
+                    return 1;
+                }
+            }
+
+            if (valA is bool && valB is bool )
+            {
+                bool boolA = (bool)valA;
+                bool boolB = (bool)valB;
+
+                if (boolA == boolB)
+                {
+                    return 0;
+                }
+                else if (boolA)
+                {
+                    return -1;
+                }
+
+                return 1;
+            }
+
+            return 0;
+        }
+
+
+        public static int CompareItemsByModifiedDateAscending(IItem itemA, IItem itemB)
+        {
+            if (itemA.ModifiedDateTime == null && itemB.ModifiedDateTime == null)
+            {
+                return 0;
+            }
+
+            if (itemA.ModifiedDateTime == null && itemB.ModifiedDateTime != null)
+            {
+                return 1;
+            }
+
+            if (itemA.ModifiedDateTime != null && itemB.ModifiedDateTime == null)
+            {
+                return -1;
+            }
+
+            return itemA.ModifiedDateTime.GetTime() - itemB.ModifiedDateTime.GetTime();
+        }
+
+        public static int CompareItemsByModifiedDateDescending(IItem itemA, IItem itemB)
+        {
+            if (itemA.ModifiedDateTime == null && itemB.ModifiedDateTime == null)
+            {
+                return 0;
+            }
+
+            if (itemA.ModifiedDateTime == null && itemB.ModifiedDateTime != null)
+            {
+                return -1;
+            }
+
+            if (itemA.ModifiedDateTime != null && itemB.ModifiedDateTime == null)
+            {
+                return 1;
+            }
+
+            return itemB.ModifiedDateTime.GetTime() - itemA.ModifiedDateTime.GetTime();
+        }
+
+
+        public static int CompareItemsByCreatedDateAscending(IItem itemA, IItem itemB)
+        {
+            if (itemA.CreatedDateTime == null && itemB.CreatedDateTime == null)
+            {
+                return 0;
+            }
+
+            if (itemA.CreatedDateTime == null && itemB.CreatedDateTime != null)
+            {
+                return 1;
+            }
+
+            if (itemA.CreatedDateTime != null && itemB.CreatedDateTime == null)
+            {
+                return -1;
+            }
+
+            return itemA.CreatedDateTime.GetTime() - itemB.CreatedDateTime.GetTime();
+        }
+
+        public static int CompareItemsByCreatedDateDescending(IItem itemA, IItem itemB)
+        {
+            if (itemA.CreatedDateTime == null && itemB.CreatedDateTime == null)
+            {
+                return 0;
+            }
+
+            if (itemA.CreatedDateTime == null && itemB.CreatedDateTime != null)
+            {
+                return -1;
+            }
+
+            if (itemA.CreatedDateTime != null && itemB.CreatedDateTime == null)
+            {
+                return 1;
+            }
+
+            return itemB.CreatedDateTime.GetTime() - itemA.CreatedDateTime.GetTime();
+        }
+
 
         public static void SetDataObject(IDataStoreItemSet itemSet, IItem item, object data)
         {
@@ -160,6 +441,12 @@ namespace BL.Data
                 if ((fi.Type == FieldType.Integer || fi.Type == FieldType.BigInteger) && value is String)
                 {
                     value = Int32.Parse((String)value);
+                }
+                else if ((fi.Type == FieldType.DateTime) && value is String)
+                {
+                    Date dt = Date.Parse((String)value);
+
+                    value = new Date(Date.UTC(dt.GetFullYear(), dt.GetMonth(), dt.GetDate(), dt.GetHours(), dt.GetMinutes(), dt.GetSeconds(), dt.GetMilliseconds()));
                 }
             }
 
@@ -375,6 +662,11 @@ namespace BL.Data
             if (val == null)
             {
                 return null;
+            }
+
+            if (val is Date)
+            {
+                return JsonUtilities.EncodeDate((Date)val);
             }
 
             return val.ToString();

@@ -7,6 +7,18 @@ using System.Linq;
 
 namespace BL.Data
 {
+
+    public enum ItemSetSort
+    {
+        None = 0,
+        ModifiedDateAscending = 1,
+        ModifiedDateDescending = 2,
+        CreatedDateAscending = 3,
+        CreatedDateDescending = 4,
+        FieldAscending = 5,
+        FieldDescending = 6
+    }
+
     public abstract class ItemSet : IDataStoreItemSet
     {
         private IDataStoreType list;
@@ -60,6 +72,40 @@ namespace BL.Data
         {
             this.list = list;
             this.query = query;
+        }
+       
+        public List<IItem> GetSortedItems(ItemSetSort sort, String fieldName)
+        {
+            return GetSortedItemList(this.Items, sort, fieldName);
+        }
+
+        public static List<IItem> GetSortedItemList(List<IItem> source, ItemSetSort sort, String sortField)
+        {
+            List<IItem> items = new List<IItem>();
+
+            foreach (IItem item in source)
+            {
+                items.Add(item);
+            }
+
+            if (sort == ItemSetSort.ModifiedDateAscending)
+            {
+                items.Sort(Item.CompareItemsByModifiedDateAscending);
+            }
+            else if (sort == ItemSetSort.ModifiedDateDescending)
+            {
+                items.Sort(Item.CompareItemsByModifiedDateDescending);
+            }            
+            else if (sort == ItemSetSort.CreatedDateAscending)
+            {
+                items.Sort(Item.CompareItemsByCreatedDateAscending);
+            }
+            else if (sort == ItemSetSort.CreatedDateDescending)
+            {
+                items.Sort(Item.CompareItemsByCreatedDateDescending);
+            }
+
+            return items;
         }
 
         public static object GetDataObject(IDataStoreItemSet itemSet, IItem item)
