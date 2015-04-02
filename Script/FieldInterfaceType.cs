@@ -14,6 +14,7 @@ namespace BL.Data
         Phone = 4,
         Email = 5,
         Numeric = 6,
+        UserList = 7,
         NoValue=99
     }
 }

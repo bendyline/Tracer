@@ -239,7 +239,7 @@ namespace BL.Data
 
             if (valA is Int32 && valB is Int32)
             {
-                return ((Int32)valB) - ((Int32)valA);
+                return ((Int32)valA) - ((Int32)valB);
             }
 
             if (valA is Int64 && valB is Int64)
