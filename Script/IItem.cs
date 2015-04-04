@@ -14,7 +14,7 @@ namespace BL.Data
         
         Date ModifiedDateTime { get; }
 
-        String CreatedUserId { get; }
+        String CreatedByUserId { get; }
 
         String ModifiedUserId { get; }
 
@@ -35,7 +35,11 @@ namespace BL.Data
         void SetStringValue(String name, String value);
         
         Nullable<Int32> GetInt32Value(String name);
+
         void SetInt32Value(String name, Nullable<Int32> value);
+
+        Nullable<Int64> GetInt64Value(String name);
+        void SetInt64Value(String name, Nullable<Int64> value);
 
         Nullable<bool> GetBooleanValue(String name);
         void SetBooleanValue(String name, Nullable<bool> value);

@@ -429,37 +429,41 @@ namespace BL.Data
             }
 
             Script.Literal(@"
-                    var fieldarr = {1};
-                    for (var i=0; i<{0}.length; i++)
-                    {{
-                        var oc = {0}[i];
-                        var newe = new BL.Data.ODataEntity({2});
+var fieldarr = {1};
+for (var i=0; i<{0}.length; i++)
+{{
+    var oc = {0}[i];
+
+    if (oc != null)
+    {{
+        var newe = new BL.Data.ODataEntity({2});
   
-                        for (var j=0; j<fieldarr.length; j++)
-                        {{
-                            var fi = fieldarr[j];
-                            var fiName = fi.get_name();
-                            var fiNameL = fiName.toLowerCase();
+        for (var j=0; j<fieldarr.length; j++)
+        {{
+            var fi = fieldarr[j];
+            var fiName = fi.get_name();
+            var fiNameL = fiName.toLowerCase();
 
-                            var val = oc[fi.get_name()];
+            var val = oc[fi.get_name()];
 
-                            if (val != null)
-                            {{
-                                newe.setValue(fiName, val);
-                            }}
+            if (val != null)
+            {{
+                newe.setValue(fiName, val);
+            }}
 
-                            if (fiNameL == ""createddate"")
-                            {{
-                                newe.setCreatedDateTime(newe.getValue(fiName));
-                            }}
-                            else if (fiNameL == ""modifieddate"")
-                            {{
-                                newe.setModifiedDateTime(newe.getValue(fiName));
-                            }}
-                        }}
-newe.setLocalStatus(2);
-this.add(newe);
-                    }}
+            if (fiNameL == ""createddate"")
+            {{
+                newe.setCreatedDateTime(newe.getValue(fiName));
+            }}
+            else if (fiNameL == ""modifieddate"")
+            {{
+                newe.setModifiedDateTime(newe.getValue(fiName));
+            }}
+        }}
+        newe.setLocalStatus(2);
+        this.add(newe);
+    }}
+}}
                     
 ", results, this.entityType.Fields, this.entityType);
 

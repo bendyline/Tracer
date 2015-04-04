@@ -23,9 +23,11 @@ namespace BL.Data
         private String placeholder;
         private Nullable<ScaleType> scaleType = null;
         private bool displayKey = false;
+        private String relatedField0;
         private String relatedField1;
         private Nullable<int> intMinValue = null;
         private Nullable<int> intMaxValue = null;
+        private Nullable<int> intDefaultValue = null;
 
         [ScriptName("i_intMinValue")]
         public Nullable<int> IntMinValue
@@ -41,6 +43,20 @@ namespace BL.Data
             }
         }
 
+        [ScriptName("i_intDefaultValue")]
+        public Nullable<int> IntDefaultValue
+        {
+            get
+            {
+                return this.intDefaultValue;
+            }
+
+            set
+            {
+                this.intDefaultValue = value;
+            }
+        }
+
         [ScriptName("i_intMaxValue")]
         public Nullable<int> IntMaxValue
         {
@@ -52,6 +68,27 @@ namespace BL.Data
             set
             {
                 this.intMaxValue = value;
+            }
+        }
+
+        [ScriptName("s_relatedField0")]
+        public String RelatedField0
+        {
+            get
+            {
+                return this.relatedField0;
+            }
+
+            set
+            {
+                if (this.relatedField0 == value)
+                {
+                    return;
+                }
+
+                this.relatedField0 = value;
+
+                this.NotifyPropertyChanged("RelatedField0");
             }
         }
 

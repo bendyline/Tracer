@@ -38,7 +38,7 @@ namespace BL.Data
             }
         }
 
-        public String CreatedUserId 
+        public String CreatedByUserId 
         { 
             get
             {
@@ -445,7 +445,7 @@ namespace BL.Data
                 {
                     Date dt = Date.Parse((String)value);
 
-                    value = new Date(Date.UTC(dt.GetFullYear(), dt.GetMonth(), dt.GetDate(), dt.GetHours(), dt.GetMinutes(), dt.GetSeconds(), dt.GetMilliseconds()));
+                    value = Utilities.ConvertToUtc(dt);
                 }
             }
 
