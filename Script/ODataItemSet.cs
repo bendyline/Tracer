@@ -73,7 +73,7 @@ namespace BL.Data
 
             set
             {
-                if (this.autoSave == null)
+                if (this.autoSave == value)
                 {
                     return;
                 }

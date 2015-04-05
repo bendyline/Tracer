@@ -222,7 +222,7 @@ namespace BL.Data
         {
             get
             {
-                return this.placeholder != null || this.rangeEndDescription != null || this.rangeStartDescription != null || this.displayKey != null;
+                return this.placeholder != null || this.rangeEndDescription != null || this.rangeStartDescription != null;
             }
         }
 
