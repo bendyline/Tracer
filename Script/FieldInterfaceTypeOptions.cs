@@ -25,6 +25,10 @@ namespace BL.Data
         private bool displayKey = false;
         private String relatedField0;
         private String relatedField1;
+
+        private Nullable<int> suggestedWidth = null;
+        private Nullable<int> suggestedHeight = null;
+        
         private Nullable<int> intMinValue = null;
         private Nullable<int> intMaxValue = null;
         private Nullable<int> intDefaultValue = null;
@@ -40,6 +44,34 @@ namespace BL.Data
             set
             {
                 this.intMinValue = value;
+            }
+        }
+
+        [ScriptName("i_suggestedWidth")]
+        public Nullable<int> SuggestedWidth
+        {
+            get
+            {
+                return this.suggestedWidth;
+            }
+
+            set
+            {
+                this.suggestedWidth = value;
+            }
+        }
+
+        [ScriptName("i_suggestedHeight")]
+        public Nullable<int> SuggestedHeight
+        {
+            get
+            {
+                return this.suggestedHeight;
+            }
+
+            set
+            {
+                this.suggestedHeight = value;
             }
         }
 

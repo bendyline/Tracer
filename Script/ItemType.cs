@@ -22,6 +22,11 @@ namespace BL.Data
             {
                 return this.keyFieldId;
             }
+
+            set
+            {
+                this.keyFieldId = value;
+            }
         }
 
 
@@ -61,6 +66,11 @@ namespace BL.Data
             get
             {
                 return this.name;
+            }
+
+            set
+            {
+                this.name = value;
             }
         }
 

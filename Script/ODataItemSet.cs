@@ -22,7 +22,6 @@ namespace BL.Data
         private bool isRetrieved = false;
         private bool autoSave = false;
         private bool autoSavePending = false;
-        private bool isSaving = false;
 
         public event DataStoreItemSetEventHandler ItemSetChanged;
         public event DataStoreItemEventHandler ItemInSetChanged;
@@ -367,7 +366,6 @@ namespace BL.Data
 
                 if (!ode.Disconnected && ode.IsValid && ode.LocalStatus != ItemLocalStatus.Unchanged)
                 {
-                    this.isSaving = true;
                     ode.Save(this.SaveComplete, null);
                     this.FireSaveStateChanged();
                 }
@@ -378,8 +376,6 @@ namespace BL.Data
 
         private void SaveComplete(IAsyncResult result)
         {
-            this.isSaving = false;
-
             this.FireSaveStateChanged();
         }
 

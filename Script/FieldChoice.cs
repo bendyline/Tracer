@@ -11,6 +11,7 @@ namespace BL.Data
     {
         private String displayName;
         private String id;
+        private String imageUrl;
         
         public String Id
         {
@@ -41,6 +42,24 @@ namespace BL.Data
             set
             {
                 this.displayName = value;
+            }
+        }
+        public String ImageUrl
+        {
+            get
+            {
+
+                if (this.imageUrl == null)
+                {
+                    return this.id;
+                }
+
+                return this.imageUrl;
+            }
+
+            set
+            {
+                this.imageUrl = value;
             }
         }
 

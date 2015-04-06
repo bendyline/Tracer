@@ -56,6 +56,11 @@ namespace BL.Data
             {
                 return this.name;
             }
+
+            set
+            {
+                this.name = value;
+            }
         }
 
         public String Location 

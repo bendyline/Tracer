@@ -105,14 +105,23 @@ namespace BL.Data
         {
             List<IItem> itemsTemp = new List<IItem>();
 
+            DataStoreItemSetEventArgs dsisea = new DataStoreItemSetEventArgs(this);
+
+
             foreach (IItem item in this.Items)
             {
                 itemsTemp.Add(item);
+                dsisea.RemovedItems.Add(item);
             }
 
             foreach (IItem item in itemsTemp)
             {
                 this.Remove(item);
+            }
+
+            if (this.ItemSetChanged != null)
+            {
+                this.ItemSetChanged(this, dsisea);
             }
         }
 
@@ -133,6 +142,13 @@ namespace BL.Data
             this.itemsByLocalOnlyUniqueId[item.LocalOnlyUniqueId] = item;
             this.itemsById[item.Id] = item;
             this.Items.Add(item);
+
+            if (this.ItemSetChanged != null)
+            {
+                DataStoreItemSetEventArgs dsiea = DataStoreItemSetEventArgs.ItemAdded(this, item);
+
+                this.ItemSetChanged(this, dsiea);
+            }
         }
 
         public void Remove(IItem item)
@@ -142,6 +158,13 @@ namespace BL.Data
                 this.itemsByLocalOnlyUniqueId.Remove(item.LocalOnlyUniqueId);
                 this.itemsById.Remove(item.Id);
                 this.Items.Remove(item);
+
+                if (this.ItemSetChanged != null)
+                {
+                    DataStoreItemSetEventArgs dsiea = DataStoreItemSetEventArgs.ItemRemoved(this, item);
+
+                    this.ItemSetChanged(this, dsiea);
+                }
             }
         }
 

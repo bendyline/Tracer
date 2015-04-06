@@ -673,7 +673,7 @@ namespace BL.Data
 
         public void SetStringValue(String name, String value)
         {
-            if (this.data.ContainsKey(name) && this.data[name] == value)
+            if (this.data.ContainsKey(name) && (String)this.data[name] == value)
             {
                 return;
             }
@@ -699,7 +699,7 @@ namespace BL.Data
 
             foreach (KeyValuePair<String, String> kvp in values)
             {
-                if (!this.data.ContainsKey(kvp.Key) || this.data[kvp.Key] != kvp.Value)
+                if (!this.data.ContainsKey(kvp.Key) || (String)this.data[kvp.Key] != kvp.Value)
                 {
                     hasChanged = true;
                     this.data[kvp.Key] = kvp.Value;

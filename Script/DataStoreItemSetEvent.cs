@@ -59,5 +59,22 @@ namespace BL.Data
             this.removedItems = new List<IItem>();
             this.changedItems = new List<IItem>();
         }
+
+        public static DataStoreItemSetEventArgs ItemAdded(IDataStoreItemSet itemSet, IItem item)
+        {
+            DataStoreItemSetEventArgs dsisea = new DataStoreItemSetEventArgs(itemSet);
+
+            dsisea.AddedItems.Add(item);
+
+            return dsisea;
+        }
+        public static DataStoreItemSetEventArgs ItemRemoved(IDataStoreItemSet itemSet, IItem item)
+        {
+            DataStoreItemSetEventArgs dsisea = new DataStoreItemSetEventArgs(itemSet);
+
+            dsisea.RemovedItems.Add(item);
+
+            return dsisea;
+        }
     }
 }

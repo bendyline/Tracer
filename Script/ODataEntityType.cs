@@ -105,6 +105,7 @@ namespace BL.Data
             this.fieldsByName = new Dictionary<string, Field>();
             this.itemsByQuery = new Dictionary<string, ODataItemSet>();
             this.fields = new List<IDataStoreField>();
+            this.items = new List<IItem>();
         }
 
         public IDataStoreField AssumeField(String name, FieldType fieldType)

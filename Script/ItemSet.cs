@@ -165,6 +165,13 @@ namespace BL.Data
             if (this.Items.Contains(item))
             {
                 this.Items.Remove(item);
+
+                if (this.ItemSetChanged != null)
+                {
+                    DataStoreItemSetEventArgs dsiea = DataStoreItemSetEventArgs.ItemRemoved(this, item);
+
+                    this.ItemSetChanged(this, dsiea);
+                }
             }
         }
 
@@ -173,6 +180,13 @@ namespace BL.Data
             if (!this.Items.Contains(item))
             {
                 this.Items.Add(item);
+
+                if (this.ItemSetChanged != null)
+                {
+                    DataStoreItemSetEventArgs dsiea = DataStoreItemSetEventArgs.ItemAdded(this, item);
+
+                    this.ItemSetChanged(this, dsiea);
+                }
             }
         }
     }
