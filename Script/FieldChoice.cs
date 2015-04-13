@@ -48,12 +48,6 @@ namespace BL.Data
         {
             get
             {
-
-                if (this.imageUrl == null)
-                {
-                    return this.id;
-                }
-
                 return this.imageUrl;
             }
 
