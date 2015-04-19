@@ -10,10 +10,10 @@ namespace BL.Data
     public class FieldChoice : SerializableObject
     {
         private String displayName;
-        private String id;
+        private object id;
         private String imageUrl;
         
-        public String Id
+        public object Id
         {
             get
             {
@@ -33,7 +33,7 @@ namespace BL.Data
 
                 if (this.displayName == null)
                 {
-                    return this.id;
+                    return this.id.ToString();
                 }
 
                 return this.displayName;

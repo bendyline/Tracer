@@ -61,7 +61,7 @@ namespace BL.Data
         public void Add(SerializableObject choice)
         {
             this.choices.Add(choice);
-            this.choicesById[((FieldChoice)choice).Id] = (FieldChoice)choice;
+            this.choicesById[((FieldChoice)choice).Id.ToString()] = (FieldChoice)choice;
         }
     }
 }

@@ -10,6 +10,8 @@ namespace BL.Data
         event PropertyChangedEventHandler PropertyChanged;
         bool Required { get; }
 
+        bool AllowNull{ get; }
+
         FieldChoiceCollection Choices { get;  }
         String DisplayName { get; }
         String Name { get; }

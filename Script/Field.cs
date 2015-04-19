@@ -13,6 +13,7 @@ namespace BL.Data
         private String name;
         private String displayName;
         private bool required;
+        private bool allowNull;
         private FieldType fieldType;
         private FieldInterfaceType interfaceType;
         private FieldInterfaceTypeOptions interfaceTypeOptions;
@@ -31,6 +32,20 @@ namespace BL.Data
             set
             {
                 this.required = value;
+            }
+        }
+
+        [ScriptName("b_allowNull")]
+        public bool AllowNull
+        {
+            get
+            {
+                return this.allowNull;
+            }
+
+            set
+            {
+                this.allowNull = value;
             }
         }
 
