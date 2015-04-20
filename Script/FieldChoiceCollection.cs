@@ -11,21 +11,12 @@ namespace BL.Data
     public class FieldChoiceCollection : ISerializableCollection, IEnumerable
     {
         private ArrayList choices;
-        private Dictionary<String, FieldChoice> choicesById;
 
         public ArrayList Choices
         {
             get
             {
                 return this.choices;
-            }
-        }
-
-        public FieldChoice this[int index]
-        {
-            get
-            {
-                return (FieldChoice)this.choices[index];
             }
         }
 
@@ -37,18 +28,12 @@ namespace BL.Data
         public FieldChoiceCollection()
         {
             this.choices = new ArrayList();
-            this.choicesById = new Dictionary<string, FieldChoice>();
         }
 
-        public FieldChoice GetById(String id)
-        {
-            return this.choicesById[id];
-        }
 
         public void Clear()
         {
             this.choices.Clear();
-            this.choicesById.Clear();
         }
 
         public SerializableObject Create()
@@ -61,7 +46,6 @@ namespace BL.Data
         public void Add(SerializableObject choice)
         {
             this.choices.Add(choice);
-            this.choicesById[((FieldChoice)choice).Id.ToString()] = (FieldChoice)choice;
         }
     }
 }

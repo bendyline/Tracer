@@ -33,6 +33,11 @@ namespace BL.Data
 
                 if (this.displayName == null)
                 {
+                    if (this.id == null)
+                    {
+                        return String.Empty;
+                    }
+
                     return this.id.ToString();
                 }
 

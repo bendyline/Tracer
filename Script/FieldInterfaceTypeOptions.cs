@@ -28,7 +28,12 @@ namespace BL.Data
 
         private Nullable<int> suggestedWidth = null;
         private Nullable<int> suggestedHeight = null;
-        
+
+        private String stringFalseValue = null;
+        private String stringTrueValue = null;
+
+        private Nullable<int> intFalseValue = null;
+        private Nullable<int> intTrueValue = null;
         private Nullable<int> intMinValue = null;
         private Nullable<int> intMaxValue = null;
         private Nullable<int> intDefaultValue = null;
@@ -72,6 +77,62 @@ namespace BL.Data
             set
             {
                 this.suggestedHeight = value;
+            }
+        }
+
+        [ScriptName("i_stringFalseValue")]
+        public String StringFalseValue
+        {
+            get
+            {
+                return this.stringFalseValue;
+            }
+
+            set
+            {
+                this.stringFalseValue = value;
+            }
+        }
+
+        [ScriptName("i_stringTrueValue")]
+        public String StringTrueValue
+        {
+            get
+            {
+                return this.stringFalseValue;
+            }
+
+            set
+            {
+                this.stringTrueValue = value;
+            }
+        }
+
+        [ScriptName("i_intFalseValue")]
+        public Nullable<int> IntFalseValue
+        {
+            get
+            {
+                return this.intFalseValue;
+            }
+
+            set
+            {
+                this.intFalseValue = value;
+            }
+        }
+
+        [ScriptName("i_intTrueValue")]
+        public Nullable<int> IntTrueValue
+        {
+            get
+            {
+                return this.intTrueValue;
+            }
+
+            set
+            {
+                this.intTrueValue = value;
             }
         }
 
