@@ -25,6 +25,8 @@ namespace BL.Data
         private bool displayKey = false;
         private String relatedField0;
         private String relatedField1;
+        private Nullable<int> fontSize;
+        private Nullable<int> styleId;
 
         private Nullable<int> suggestedWidth = null;
         private Nullable<int> suggestedHeight = null;
@@ -38,6 +40,48 @@ namespace BL.Data
         private Nullable<int> intMaxValue = null;
         private Nullable<int> intDefaultValue = null;
 
+        [ScriptName("i_styleId")]
+        public Nullable<int> StyleId
+        {
+            get
+            {
+                return this.styleId;
+            }
+
+            set
+            {
+                if (this.styleId == value)
+                {
+                    return;
+                }
+
+                this.styleId = value;
+
+                this.NotifyPropertyChanged("StyleId");
+            }
+        }
+       
+        [ScriptName("i_fontSize")]
+        public Nullable<int> FontSize
+        { 
+            get
+            {
+                return this.fontSize;
+            }
+
+            set
+            {
+                if (this.fontSize == value)
+                {
+                    return;
+                }
+
+                this.fontSize = value;
+
+                this.NotifyPropertyChanged("FontSize");
+            }
+        }
+
         [ScriptName("i_intMinValue")]
         public Nullable<int> IntMinValue
         { 
@@ -48,7 +92,14 @@ namespace BL.Data
 
             set
             {
+                if (this.intMinValue == value)
+                {
+                    return;
+                }
+
                 this.intMinValue = value;
+
+                this.NotifyPropertyChanged("IntMinValue");
             }
         }
 
@@ -62,7 +113,14 @@ namespace BL.Data
 
             set
             {
+                if (this.suggestedWidth == value)
+                {
+                    return;
+                }
+
                 this.suggestedWidth = value;
+
+                this.NotifyPropertyChanged("SuggestedWidth");
             }
         }
 
@@ -76,7 +134,14 @@ namespace BL.Data
 
             set
             {
+                if (this.suggestedHeight == value)
+                {
+                    return;
+                }
+
                 this.suggestedHeight = value;
+
+                this.NotifyPropertyChanged("SuggestedHeight");
             }
         }
 
@@ -90,7 +155,14 @@ namespace BL.Data
 
             set
             {
+                if (this.stringFalseValue == value)
+                {
+                    return;
+                }
+
                 this.stringFalseValue = value;
+
+                this.NotifyPropertyChanged("StringFalseValue");
             }
         }
 
@@ -104,7 +176,14 @@ namespace BL.Data
 
             set
             {
+                if (this.stringTrueValue == value)
+                {
+                    return;
+                }
+
                 this.stringTrueValue = value;
+
+                this.NotifyPropertyChanged("StringTrueValue");
             }
         }
 
@@ -118,7 +197,14 @@ namespace BL.Data
 
             set
             {
+                if (this.intFalseValue == value)
+                {
+                    return;
+                }
+
                 this.intFalseValue = value;
+
+                this.NotifyPropertyChanged("IntFalseValue");
             }
         }
 
@@ -132,7 +218,14 @@ namespace BL.Data
 
             set
             {
+                if (this.intTrueValue == value)
+                {
+                    return;
+                }
+
                 this.intTrueValue = value;
+
+                this.NotifyPropertyChanged("IntTrueValue");
             }
         }
 
@@ -146,7 +239,14 @@ namespace BL.Data
 
             set
             {
+                if (this.intDefaultValue == value)
+                {
+                    return;
+                }
+
                 this.intDefaultValue = value;
+
+                this.NotifyPropertyChanged("IntDefaultValue");
             }
         }
 
@@ -160,7 +260,14 @@ namespace BL.Data
 
             set
             {
+                if (this.intMaxValue == value)
+                {
+                    return;
+                }
+
                 this.intMaxValue = value;
+            
+                this.NotifyPropertyChanged("IntMaxValue");
             }
         }
 

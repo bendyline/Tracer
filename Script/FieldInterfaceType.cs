@@ -15,6 +15,8 @@ namespace BL.Data
         Email = 5,
         Numeric = 6,
         UserList = 7,
+        Checkbox = 8,
+        SwitchToggle = 9,
         NoValue=99
     }
 }
