@@ -432,8 +432,20 @@ for (var i=0; i<{0}.length; i++)
 
     if (oc != null)
     {{
-        var newe = new BL.Data.ODataEntity({2});
-  
+        var idVal = oc[""Id""];
+
+
+        var newe = null;
+
+        if (idVal == null) 
+        {{
+            newe = new BL.Data.ODataEntity({2});
+        }}
+        else
+        {{
+            newe = {2}.ensureItem(idVal);
+        }}
+
         for (var j=0; j<fieldarr.length; j++)
         {{
             var fi = fieldarr[j];

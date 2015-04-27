@@ -10,6 +10,7 @@ namespace BL.Data
     {
         private List<IDataStoreField> fields;
         private Dictionary<String, Field> fieldsByName;
+        private Dictionary<String, ODataEntity> itemsById;
         private List<IItem> items;
         private String name;
         private Dictionary<String, ODataItemSet> itemsByQuery;
@@ -105,6 +106,7 @@ namespace BL.Data
             this.fieldsByName = new Dictionary<string, Field>();
             this.itemsByQuery = new Dictionary<string, ODataItemSet>();
             this.fields = new List<IDataStoreField>();
+            this.itemsById = new Dictionary<String, ODataEntity>();
             this.items = new List<IItem>();
         }
 
@@ -175,6 +177,23 @@ namespace BL.Data
 
             this.allItemsSet = odis;
             return odis;
+        }
+
+        public ODataEntity EnsureItem(String id)
+        {
+            if (this.itemsById.ContainsKey(id))
+            {
+                return this.itemsById[id];
+            }
+
+            ODataEntity item = new ODataEntity(this);
+
+            item.SetId(id);
+
+            this.itemsById[id] = item;
+            this.items.Add(item);
+
+            return item;
         }
 
         public IDataStoreItemSet EnsureItemSet(Query query)

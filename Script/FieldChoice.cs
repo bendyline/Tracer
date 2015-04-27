@@ -13,6 +13,21 @@ namespace BL.Data
         private object id;
         private String imageUrl;
         
+        public object EffectiveId
+        {
+            get
+            {
+                object abstractedId = this.id;
+
+                if (abstractedId == null)
+                {
+                    abstractedId = this.DisplayName;
+                }
+
+                return abstractedId;
+            }
+        }
+
         public object Id
         {
             get

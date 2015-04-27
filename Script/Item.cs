@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Serialization;
 
 namespace BL.Data
 {
@@ -443,7 +444,19 @@ namespace BL.Data
                 }
                 else if ((fi.Type == FieldType.DateTime) && value is String)
                 {
-                    Date dt = Date.Parse((String)value);
+                    Date dt;
+
+                    int dateToken = ((String)value).IndexOf("/Date(");
+                    int dateTokenEnd = ((String)value).LastIndexOf(")");
+
+                    if (dateToken >= 0 && dateTokenEnd > dateToken)
+                    {
+                        dt = new Date(Int32.Parse(((String)value).Substring(dateToken + 6, dateTokenEnd)));
+                    }
+                    else
+                    {
+                        dt = Date.Parse((String)value);
+                    }
 
                     value = Utilities.ConvertToUtc(dt);
                 }
