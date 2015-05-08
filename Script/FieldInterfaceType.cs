@@ -17,6 +17,9 @@ namespace BL.Data
         UserList = 7,
         Checkbox = 8,
         SwitchToggle = 9,
+        DateTimePicker = 10,
+        DatePicker = 11,
+        TimePicker = 12,
         NoValue=99
     }
 }

@@ -10,13 +10,14 @@ namespace BL.Data
 
     public enum ItemSetSort
     {
-        None = 0,
+        DefaultState = 0,
         ModifiedDateAscending = 1,
         ModifiedDateDescending = 2,
         CreatedDateAscending = 3,
         CreatedDateDescending = 4,
         FieldAscending = 5,
-        FieldDescending = 6
+        FieldDescending = 6,
+        None = 99
     }
 
     public abstract class ItemSet : IDataStoreItemSet

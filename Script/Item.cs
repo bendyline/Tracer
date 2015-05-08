@@ -165,7 +165,7 @@ namespace BL.Data
 
         public static int CompareItems(IItem itemA, IItem itemB, ItemSetSort sort, String fieldName)
         {
-            if (sort == ItemSetSort.None)
+            if (sort == ItemSetSort.DefaultState)
             {
                 return 0;
             }
