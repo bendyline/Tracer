@@ -503,6 +503,11 @@ for (var i=0; i<{0}.length; i++)
         {
             Operation o = this.retrieveOperation;
             
+            if (o == null)
+            {
+                return;
+            }
+
             XmlHttpRequest xhr = (XmlHttpRequest)o.Tag;
 
             if (o != null && xhr.ReadyState == ReadyState.Loaded) 
