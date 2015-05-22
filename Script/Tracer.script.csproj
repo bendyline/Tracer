@@ -58,6 +58,7 @@
     <CodeAnalysisRuleSet>Properties\FxCop.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="DataStoreItemChangedEvent.cs" />
     <Compile Include="FieldInterfaceTypeOptions.cs" />
     <Compile Include="LessThanClause.cs" />
     <Compile Include="GreaterThanClause.cs" />

@@ -20,6 +20,7 @@ namespace BL.Data
         DateTimePicker = 10,
         DatePicker = 11,
         TimePicker = 12,
-        NoValue=99
+        Order = 13,
+        NoValue = 99
     }
 }

@@ -24,7 +24,7 @@ namespace BL.Data
         private bool autoSavePending = false;
 
         public event DataStoreItemSetEventHandler ItemSetChanged;
-        public event DataStoreItemEventHandler ItemInSetChanged;
+        public event DataStoreItemChangedEventHandler ItemInSetChanged;
 
         public event DataStoreItemSetEventHandler SaveStateChanged;
 
@@ -149,7 +149,6 @@ namespace BL.Data
             item.SetLocalStatus(ItemLocalStatus.NewItem);
             item.SetCreatedDateTime(Date.Now);
             item.SetModifiedDateTime(item.CreatedDateTime);
-;
 
             this.Add(item);
 
@@ -310,7 +309,7 @@ namespace BL.Data
             }
         }
 
-        private void item_ItemChanged(object sender, DataStoreItemEventArgs e)
+        private void item_ItemChanged(object sender, DataStoreItemChangedEventArgs e)
         {
             if (this.ItemInSetChanged != null)
             {

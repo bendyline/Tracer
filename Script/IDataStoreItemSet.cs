@@ -41,7 +41,7 @@ namespace BL.Data
         }
 
         event DataStoreItemSetEventHandler ItemSetChanged;
-        event DataStoreItemEventHandler ItemInSetChanged;
+        event DataStoreItemChangedEventHandler ItemInSetChanged;
         event DataStoreItemSetEventHandler SaveStateChanged;
 
         List<IItem> GetSortedItems(ItemSetSort sort, String fieldName);

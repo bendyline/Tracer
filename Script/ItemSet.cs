@@ -26,7 +26,7 @@ namespace BL.Data
         private Query query;
 
         public event DataStoreItemSetEventHandler ItemSetChanged;
-        public event DataStoreItemEventHandler ItemInSetChanged;
+        public event DataStoreItemChangedEventHandler ItemInSetChanged;
         public event DataStoreItemSetEventHandler SaveStateChanged;
 
         public bool IsSaving
@@ -83,6 +83,35 @@ namespace BL.Data
         public static List<IItem> GetSortedItemList(List<IItem> source, ItemSetSort sort, String sortField)
         {
             List<IItem> items = new List<IItem>();
+
+            if (sort == ItemSetSort.FieldAscending || sort == ItemSetSort.FieldDescending)
+            {
+                foreach (IItem itemToPlace in source)
+                {
+                    bool addedItem = false;
+
+                    int index = 0;
+
+                    foreach (IItem placedItem in items)
+                    {
+                        if (itemToPlace.CompareTo(placedItem, sort, sortField) <= 0)
+                        {
+                            items.Insert(index, itemToPlace);
+                            addedItem = true;
+                            break;
+                        }
+
+                        index++;
+                    }
+
+                    if (!addedItem)
+                    {
+                        items.Add(itemToPlace);
+                    }
+                }
+
+                return items;
+            }
 
             foreach (IItem item in source)
             {

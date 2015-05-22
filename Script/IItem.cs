@@ -7,7 +7,7 @@ namespace BL.Data
 {
     public interface IItem
     {
-        event DataStoreItemEventHandler ItemChanged;
+        event DataStoreItemChangedEventHandler ItemChanged;
         event DataStoreItemEventHandler ItemDeleted;
 
         Date CreatedDateTime { get; }

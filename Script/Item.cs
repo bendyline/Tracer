@@ -19,7 +19,7 @@ namespace BL.Data
         private String modifiedUserId;
         private String createdUserId;
         
-        public event DataStoreItemEventHandler ItemChanged;
+        public event DataStoreItemChangedEventHandler ItemChanged;
         public event DataStoreItemEventHandler ItemDeleted;
 
 
@@ -464,9 +464,14 @@ namespace BL.Data
 
             this.data[name] = value;
 
+            this.FireSinglePropertyItemChangedEvent(name);
+        }
+
+        private void FireSinglePropertyItemChangedEvent(String propertyName)
+        {
             if (this.ItemChanged != null)
             {
-                DataStoreItemEventArgs dsiea = new DataStoreItemEventArgs(this);
+                DataStoreItemChangedEventArgs dsiea = new DataStoreItemChangedEventArgs(this, propertyName, null);
 
                 this.ItemChanged(this, dsiea);
             }
@@ -511,12 +516,7 @@ namespace BL.Data
                 this.localStatus = ItemLocalStatus.Update;
             }
 
-            if (this.ItemChanged != null)
-            {
-                DataStoreItemEventArgs dsiea = new DataStoreItemEventArgs(this);
-
-                this.ItemChanged(this, dsiea);
-            }
+            this.FireSinglePropertyItemChangedEvent(name);
         }
         
         public Nullable<Int32> GetInt32Value(String name)
@@ -558,12 +558,7 @@ namespace BL.Data
                 this.localStatus = ItemLocalStatus.Update;
             }
 
-            if (this.ItemChanged != null)
-            {
-                DataStoreItemEventArgs dsiea = new DataStoreItemEventArgs(this);
-
-                this.ItemChanged(this, dsiea);
-            }
+            this.FireSinglePropertyItemChangedEvent(name);
         }
         
 
@@ -607,12 +602,7 @@ namespace BL.Data
                 this.localStatus = ItemLocalStatus.Update;
             }
 
-            if (this.ItemChanged != null)
-            {
-                DataStoreItemEventArgs dsiea = new DataStoreItemEventArgs(this);
-
-                this.ItemChanged(this, dsiea);
-            }
+            this.FireSinglePropertyItemChangedEvent(name);
         }
         
         public Nullable<bool> GetBooleanValue(String name)
@@ -654,12 +644,7 @@ namespace BL.Data
                 this.localStatus = ItemLocalStatus.Update;
             }
 
-            if (this.ItemChanged != null)
-            {
-                DataStoreItemEventArgs dsiea = new DataStoreItemEventArgs(this);
-
-                this.ItemChanged(this, dsiea);
-            }
+            this.FireSinglePropertyItemChangedEvent(name);
         }
         
         public String GetStringValue(String name)
@@ -698,30 +683,27 @@ namespace BL.Data
                 this.localStatus = ItemLocalStatus.Update;
             }
 
-            if (this.ItemChanged != null)
-            {
-                DataStoreItemEventArgs dsiea = new DataStoreItemEventArgs(this);
-
-                this.ItemChanged(this, dsiea);
-            }
+            this.FireSinglePropertyItemChangedEvent(name);
         }
 
         public bool SetFromValues(Dictionary<String, String> values)
         {
             bool hasChanged = false;
 
+            List<String> changedProperties = new List<string>();
+
             foreach (KeyValuePair<String, String> kvp in values)
             {
                 if (!this.data.ContainsKey(kvp.Key) || (String)this.data[kvp.Key] != kvp.Value)
                 {
-                    hasChanged = true;
+                    changedProperties.Add(kvp.Key);
                     this.data[kvp.Key] = kvp.Value;
                 }
             }
 
-            if (hasChanged && this.ItemChanged != null)
+            if (changedProperties.Count > 0 && this.ItemChanged != null)
             {
-                DataStoreItemEventArgs dsiea = new DataStoreItemEventArgs(this);
+                DataStoreItemChangedEventArgs dsiea = new DataStoreItemChangedEventArgs(this, null, changedProperties);
 
                 this.ItemChanged(this, dsiea);
             }

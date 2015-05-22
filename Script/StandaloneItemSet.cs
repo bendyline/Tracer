@@ -19,7 +19,7 @@ namespace BL.Data
         private int newItemsCreated = 0;
 
         public event DataStoreItemSetEventHandler ItemSetChanged;
-        public event DataStoreItemEventHandler ItemInSetChanged;
+        public event DataStoreItemChangedEventHandler ItemInSetChanged;
         public event DataStoreItemSetEventHandler SaveStateChanged;
 
 
