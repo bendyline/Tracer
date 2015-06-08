@@ -13,8 +13,21 @@ namespace BL.Data
         private List<IDataStoreField> fields;
         private Dictionary<String, IDataStoreField> fieldsByName;
         private List<IItem> allItems;
-
+        private String titleFieldId;
         private String keyFieldId;
+
+        public String TitleFieldId
+        {
+            get
+            {
+                return this.titleFieldId;
+            }
+
+            set
+            {
+                this.titleFieldId = value;
+            }
+        }
 
         public String KeyFieldId
         {

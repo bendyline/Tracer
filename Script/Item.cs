@@ -22,7 +22,6 @@ namespace BL.Data
         public event DataStoreItemChangedEventHandler ItemChanged;
         public event DataStoreItemEventHandler ItemDeleted;
 
-
         public Date CreatedDateTime 
         { 
             get
@@ -99,6 +98,32 @@ namespace BL.Data
             get
             {
                 return (String)this.data["Id"];
+            }
+        }
+
+        public virtual String Title
+        {
+            get
+            {
+                if (this.parentType != null && this.parentType.TitleFieldId != null)
+                {
+                    return this.GetStringValue(this.parentType.TitleFieldId);
+                }
+
+                 foreach (KeyValuePair<String, object> fieldData in this.data)
+                {
+                    if (fieldData.Value is String)
+                    {
+                        String result = (String)fieldData.Value;
+
+                        if (!String.IsNullOrEmpty(result) && result.Length > 2 && result.Length < 128)
+                        {
+                            return result;
+                        }
+                    }
+                }
+
+                return "untitled";
             }
         }
 

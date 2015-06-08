@@ -9,6 +9,8 @@ namespace BL.Data
     public interface IDataStoreType
     {
         String KeyFieldId { get; }
+        String TitleFieldId { get; }
+
         ICollection<IDataStoreField> Fields { get; }
         ICollection<IItem> AllLocalItems{ get; }
         String Name { get; }

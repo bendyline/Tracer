@@ -18,8 +18,22 @@ namespace BL.Data
         private ODataStore store;
         private String entitySetName;
         private String keyFieldId;
+        private String titleFieldId;
 
         private Query validCriteria;
+
+        public String TitleFieldId
+        {
+            get
+            {
+                return this.titleFieldId;
+            }
+
+            set
+            {
+                this.titleFieldId = value;
+            }
+        }
 
         public String KeyFieldId
         {

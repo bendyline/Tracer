@@ -21,6 +21,7 @@ namespace BL.Data
 
         string Id { get; }
         string LocalOnlyUniqueId { get;  }
+        string Title { get; }
 
         StandardStatus Status { get;  }
 
