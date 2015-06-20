@@ -8,6 +8,7 @@ namespace BL.Data
     public enum StandardStatus
     {
         Normal = 0,
+        Template = 10,
         Deleted = 86
     }
 }
