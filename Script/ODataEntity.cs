@@ -194,6 +194,9 @@ namespace BL.Data
             }
 
             this.activeSaveJson = json;
+
+            ((ODataEntityType)this.Type).UpdateItemInItemSets(this);
+
             this.SendSaveRequest();
         }
 

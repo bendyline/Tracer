@@ -210,6 +210,38 @@ namespace BL.Data
             return item;
         }
 
+        public void UpdateItemInItemSets(ODataEntity entity)
+        {
+            foreach (String key in this.itemsByQuery.Keys)
+            {
+                ODataItemSet odis = this.itemsByQuery[key];
+
+                // should this item be in this item set?
+                if (odis.GetItemById(entity.Id) == null && odis.Query.ItemMatches(entity))
+                {
+                    odis.Add(entity);
+                }
+                // or should this item be removed from this set?
+                else if (odis.GetItemById(entity.Id) != null && !odis.Query.ItemMatches(entity))
+                {
+                    odis.Remove(entity);
+                }
+            }
+        }
+
+        public void MoveItemSetToNewQuery(ODataItemSet odis, Query newQuery)
+        {
+            String oldQueryString = odis.Query.ToString().ToLowerCase();
+
+            this.itemsByQuery.Remove(oldQueryString);
+
+            odis.Query = newQuery;
+
+            String newQueryString = newQuery.ToString().ToLowerCase();
+
+            this.itemsByQuery[newQueryString] = odis;
+        }
+
         public IDataStoreItemSet EnsureItemSet(Query query)
         {
             String queryString = query.ToString().ToLowerCase();

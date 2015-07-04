@@ -114,6 +114,11 @@ namespace BL.Data
             {
                 return this.query;
             }
+
+            set
+            {
+                this.query = value;
+            }
         }
 
         public IDataStoreType Type
@@ -376,6 +381,11 @@ namespace BL.Data
         private void SaveComplete(IAsyncResult result)
         {
             this.FireSaveStateChanged();
+        }
+
+        public void InvalidateRetrieval()
+        {
+            this.isRetrieved = false;
         }
 
         public void BeginRetrieve(AsyncCallback callback, object state)
