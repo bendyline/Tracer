@@ -86,7 +86,7 @@ namespace BL.Data
             {
                 if (this.localOnlyUniqueId == null)
                 {
-                    this.localOnlyUniqueId = Utilities.GetRandomId();
+                    this.localOnlyUniqueId = Utilities.CreateRandomId();
                 }
 
                 return this.localOnlyUniqueId;
