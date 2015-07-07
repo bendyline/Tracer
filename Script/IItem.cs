@@ -31,6 +31,7 @@ namespace BL.Data
 
         object GetValue(String name);
         void SetValue(String name, object value);
+        void LocalSetValue(String name, object value);
         
         String GetStringValue(String name);
         void SetStringValue(String name, String value);

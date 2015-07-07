@@ -448,12 +448,22 @@ namespace BL.Data
 
         public void SetValue(String name, object value)
         {
+            this.SetValueFull(name, value, true);
+        }
+
+        public void LocalSetValue(String name, object value)
+        {
+            this.SetValueFull(name, value, false);
+        }
+
+        internal void SetValueFull(String name, object value, bool allowDirty)
+        {
             if (this.data[name] == value)
             {
                 return;
             }
 
-            if (this.localStatus == ItemLocalStatus.Unchanged)
+            if (this.localStatus == ItemLocalStatus.Unchanged && allowDirty)
             {
                 this.localStatus = ItemLocalStatus.Update;
             }

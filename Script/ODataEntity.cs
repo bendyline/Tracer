@@ -251,7 +251,7 @@ namespace BL.Data
 
                             if (val != null)
                             {{
-                                this.setValue(fiName, val);
+                                this.localSetValue(fiName, val);
                             }}
                         }}
 

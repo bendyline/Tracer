@@ -465,7 +465,7 @@ for (var i=0; i<{0}.length; i++)
 
             if (val != null)
             {{
-                newe.setValue(fiName, val);
+                newe.localSetValue(fiName, val);
             }}
 
             if (fiNameL == ""createddate"")
