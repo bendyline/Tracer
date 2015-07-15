@@ -22,6 +22,7 @@ namespace BL.Data
         TimePicker = 12,
         Order = 13,
         Image = 14,
+        MeUser = 15,
         NoValue = 99
     }
 }

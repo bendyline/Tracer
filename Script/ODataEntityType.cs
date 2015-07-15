@@ -216,15 +216,19 @@ namespace BL.Data
             {
                 ODataItemSet odis = this.itemsByQuery[key];
 
-                // should this item be in this item set?
-                if (odis.GetItemById(entity.Id) == null && odis.Query.ItemMatches(entity))
+                // don't mess with arbitrarily query items, like the MyItems query
+                if (String.IsNullOrEmpty(odis.Query.Source))
                 {
-                    odis.Add(entity);
-                }
-                // or should this item be removed from this set?
-                else if (odis.GetItemById(entity.Id) != null && !odis.Query.ItemMatches(entity))
-                {
-                    odis.Remove(entity);
+                    // should this item be in this item set?
+                    if (odis.GetItemByLocalOnlyUniqueId(entity.LocalOnlyUniqueId) == null && odis.Query.ItemMatches(entity))
+                    {
+                        odis.Add(entity);
+                    }
+                    // or should this item be removed from this set?
+                    else if (odis.GetItemByLocalOnlyUniqueId(entity.LocalOnlyUniqueId) != null && !odis.Query.ItemMatches(entity))
+                    {
+                        odis.Remove(entity);
+                    }
                 }
             }
         }
