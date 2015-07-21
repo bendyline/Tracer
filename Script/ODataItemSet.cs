@@ -47,6 +47,19 @@ namespace BL.Data
             }
         }
 
+        public bool IsRetrieved
+        {
+            get
+            {
+                return this.isRetrieved;
+            }
+
+            set
+            {
+                this.isRetrieved = value;
+            }
+        }
+
         public bool NeedsSaving
         {
             get
