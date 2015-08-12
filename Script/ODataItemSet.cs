@@ -428,6 +428,7 @@ namespace BL.Data
             {
                 XmlHttpRequest xhr = new XmlHttpRequest();
                 xhr.Open("GET", endpoint);
+                WebRequest.SendWithCredentials(xhr);
                 
                 xhr.SetRequestHeader("Accept", "application/json;odata=minimalmetadata");
                 xhr.SetRequestHeader("Content-Type", "application/json");
@@ -536,15 +537,22 @@ for (var i=0; i<{0}.length; i++)
             {
                 this.retrieveOperation = null;
 
-                String responseContent = xhr.ResponseText;
+                if (xhr.Status == 200)
+                {
+                    String responseContent = xhr.ResponseText;
 
-                object results = Json.Parse(responseContent);
+                    object results = Json.Parse(responseContent);
 
-                Script.Literal(@"{0}={0}.value", results);
+                    Script.Literal(@"{0}={0}.value", results);
 
-                this.SetFromData(results);
+                    this.SetFromData(results);
 
-                o.CompleteAsAsyncDone(this);
+                    o.CompleteAsAsyncDone(this);
+                }
+                else
+                {
+                    o.CompleteAsAsyncError(this, xhr.Status.ToString(), "Web request returned '" + xhr.StatusText + "'");
+                }
             }
         }
     }

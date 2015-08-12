@@ -206,6 +206,8 @@ namespace BL.Data
 
             XmlHttpRequest xhr = new XmlHttpRequest();
 
+            WebRequest.SendWithCredentials(xhr);
+
             if (this.LocalStatus == ItemLocalStatus.Update || this.LocalStatus == ItemLocalStatus.Deleted)
             {
                 xhr.Open("PUT", endpoint + "(" + this.Id + "L)");
