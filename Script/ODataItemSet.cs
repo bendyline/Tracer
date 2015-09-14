@@ -426,15 +426,11 @@ namespace BL.Data
 
             if (isNew)
             {
-                XmlHttpRequest xhr = new XmlHttpRequest();
-                xhr.Open("GET", endpoint);
-                WebRequest.SendWithCredentials(xhr);
-                
-                xhr.SetRequestHeader("Accept", "application/json;odata=minimalmetadata");
-                xhr.SetRequestHeader("Content-Type", "application/json");
+                WebRequest xhr = new WebRequest();
 
-                xhr.OnReadyStateChange = new Action(this.EndRetrieve);
                 this.retrieveOperation.Tag = xhr;
+                xhr.AuthenticationRequired = true;
+                xhr.InitializeAsJsonReadRequest(endpoint, new Action(this.EndRetrieve));
 
                 xhr.Send();
             }
@@ -531,7 +527,7 @@ for (var i=0; i<{0}.length; i++)
                 return;
             }
 
-            XmlHttpRequest xhr = (XmlHttpRequest)o.Tag;
+            WebRequest xhr = (WebRequest)o.Tag;
 
             if (o != null && xhr.ReadyState == ReadyState.Loaded) 
             {
