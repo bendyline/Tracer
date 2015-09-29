@@ -426,13 +426,17 @@ namespace BL.Data
 
             if (isNew)
             {
-                WebRequest xhr = new WebRequest();
+                WebRequest wr = new WebRequest();
 
-                this.retrieveOperation.Tag = xhr;
-                xhr.AuthenticationRequired = true;
-                xhr.InitializeAsJsonReadRequest(endpoint, new Action(this.EndRetrieve));
+                this.retrieveOperation.Tag = wr;
+                wr.Operation = this.retrieveOperation;
+                wr.AuthenticationRequired = true;
+                wr.CompletionData = this;
+                wr.OnComplete = new Action(this.EndRetrieve);
 
-                xhr.Send();
+                wr.InitializeAsJsonReadRequest(endpoint);
+
+                wr.Send();
             }
         }
 
@@ -527,29 +531,12 @@ for (var i=0; i<{0}.length; i++)
                 return;
             }
 
-            WebRequest xhr = (WebRequest)o.Tag;
+            WebRequest wr = (WebRequest)o.Tag;
+            object results = null;
 
-            if (o != null && xhr.ReadyState == ReadyState.Loaded) 
-            {
-                this.retrieveOperation = null;
+            Script.Literal(@"{0}={1}.value", results, wr.ResponseJson);
 
-                if (xhr.Status == 200)
-                {
-                    String responseContent = xhr.ResponseText;
-
-                    object results = Json.Parse(responseContent);
-
-                    Script.Literal(@"{0}={0}.value", results);
-
-                    this.SetFromData(results);
-
-                    o.CompleteAsAsyncDone(this);
-                }
-                else
-                {
-                    o.CompleteAsAsyncError(this, xhr.Status.ToString(), "Web request returned '" + xhr.StatusText + "'");
-                }
-            }
+            this.SetFromData(results);
         }
     }
 }

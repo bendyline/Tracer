@@ -35,7 +35,7 @@ namespace BL.Data
 
             set
             {
-                Debug.Assert(value != null);
+                Debug.Assert(value != null, "Value must not be null in a comparison.");
 
                 this.value = value;
             }
