@@ -4,26 +4,18 @@
 using System;
 using System.Collections.Generic;
 
-
-#if NET
-using Bendyline.Base;
-
 namespace Bendyline.Data
-#elif SCRIPTSHARP
-
-namespace BL.Data
-#endif
 {
     public delegate void DataStoreItemSetEventHandler(object sender, DataStoreItemSetEventArgs e);
 
     public class DataStoreItemSetEventArgs : EventArgs
     {
         private IDataStoreItemSet itemSet;
-        private List<IItem> addedItems;
-        private List<IItem> removedItems;
-        private List<IItem> changedItems;
+        private List<IDataStoreItem> addedItems;
+        private List<IDataStoreItem> removedItems;
+        private List<IDataStoreItem> changedItems;
 
-        public List<IItem> AddedItems
+        public IList<IDataStoreItem> AddedItems
         {
             get
             {
@@ -31,7 +23,7 @@ namespace BL.Data
             }
         }
 
-        public List<IItem> RemovedItems
+        public IList<IDataStoreItem> RemovedItems
         {
             get
             {
@@ -39,7 +31,7 @@ namespace BL.Data
             }
         }
         
-        public List<IItem> ChangedItems
+        public IList<IDataStoreItem> ChangedItems
         {
             get
             {
@@ -63,26 +55,9 @@ namespace BL.Data
         public DataStoreItemSetEventArgs(IDataStoreItemSet itemSet)
         {
             this.itemSet = itemSet;
-            this.addedItems = new List<IItem>();
-            this.removedItems = new List<IItem>();
-            this.changedItems = new List<IItem>();
-        }
-
-        public static DataStoreItemSetEventArgs ItemAdded(IDataStoreItemSet itemSet, IItem item)
-        {
-            DataStoreItemSetEventArgs dsisea = new DataStoreItemSetEventArgs(itemSet);
-
-            dsisea.AddedItems.Add(item);
-
-            return dsisea;
-        }
-        public static DataStoreItemSetEventArgs ItemRemoved(IDataStoreItemSet itemSet, IItem item)
-        {
-            DataStoreItemSetEventArgs dsisea = new DataStoreItemSetEventArgs(itemSet);
-
-            dsisea.RemovedItems.Add(item);
-
-            return dsisea;
+            this.addedItems = new List<IDataStoreItem>();
+            this.removedItems = new List<IDataStoreItem>();
+            this.changedItems = new List<IDataStoreItem>();
         }
     }
 }

@@ -3,7 +3,16 @@
 
 using System;
 
+
+#if NET
+using Bendyline.Base;
+using Bendyline.Base.ScriptCompatibility;
+
+namespace Bendyline.Data
+#elif SCRIPTSHARP
+
 namespace BL.Data
+#endif
 {
     public interface IItem
     {

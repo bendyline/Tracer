@@ -1,21 +1,18 @@
 ﻿/* Copyright (c) Bendyline LLC. All rights reserved. Licensed under the Apache License, Version 2.0.
     You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0. */
 
-
-#if NET
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Bendyline.Data
-#elif SCRIPTSHARP
-
-namespace BL.Data
-#endif
 {
-    public class Clause
+    public class DataStoreEqualsClause : DataStoreComparisonClause
     {
 
-        public virtual bool ItemMatches(IItem item)
+        public override string ToString()
         {
-            return false;
+            return "{" + this.FieldName + "=" + this.GetStringValue() + "}";
         }
     }
 }

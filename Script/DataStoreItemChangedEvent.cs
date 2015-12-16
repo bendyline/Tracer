@@ -4,7 +4,14 @@
 using System;
 using System.Collections.Generic;
 
+
+#if NET
+
+namespace Bendyline.Data
+#elif SCRIPTSHARP
+
 namespace BL.Data
+#endif
 {
     public delegate void DataStoreItemChangedEventHandler(object sender, DataStoreItemChangedEventArgs e);
 

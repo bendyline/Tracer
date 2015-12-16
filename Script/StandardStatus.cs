@@ -1,9 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿
+#if NET
+using Bendyline.Base;
+
+namespace Bendyline.Data
+#elif SCRIPTSHARP
 
 namespace BL.Data
+#endif
 {
     public enum StandardStatus
     {

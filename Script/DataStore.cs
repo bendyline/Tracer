@@ -1,10 +1,15 @@
 ﻿/* Copyright (c) Bendyline LLC. All rights reserved. Licensed under the Apache License, Version 2.0.
     You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0. */
-
 using System;
 using System.Collections.Generic;
 
+#if NET
+
+namespace Bendyline.Data
+#elif SCRIPTSHARP
+
 namespace BL.Data
+#endif
 {
     public enum DataStoreType
     {
@@ -30,7 +35,11 @@ namespace BL.Data
             switch (type)
             {
                 case DataStoreType.SharePoint:
+#if SCRIPTSHARP
                     Script.Literal("{0}= new BL.SP.Web();",store);
+#else
+                    throw new NotImplementedException();
+#endif
                     break;
              }
 

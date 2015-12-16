@@ -2,17 +2,13 @@
     You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0. */
 
 using System;
-using System.Diagnostics;
-
-#if NET
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 
 namespace Bendyline.Data
-#elif SCRIPTSHARP
-
-namespace BL.Data
-#endif
 {
-    public abstract class ComparisonClause : Clause
+    public abstract class DataStoreComparisonClause : DataStoreClause
     {
         private String fieldName;
         private object value;
@@ -39,13 +35,12 @@ namespace BL.Data
 
             set
             {
-                Debug.Assert(value != null, "Value must not be null in a comparison.");
-
                 this.value = value;
             }
+
         }
 
-        protected String GetJsonStringValue()
+        protected String GetStringValue()
         {
             if (value is String)
             {

@@ -3,11 +3,19 @@
 
 using System;
 using System.Collections.Generic;
-using System.Html;
 using System.Net;
-using System.Serialization;
+
+#if NET
+using Bendyline.Base;
+using Bendyline.Base.ScriptCompatibility;
+using System.Text;
+
+namespace Bendyline.Data
+#elif SCRIPTSHARP
+using System.Html;
 
 namespace BL.Data
+#endif
 {
     public class ODataItemSet : IDataStoreItemSet
     {
@@ -28,7 +36,9 @@ namespace BL.Data
 
         public event DataStoreItemSetEventHandler SaveStateChanged;
 
+#if SCRIPTSHARP
         private ElementEventListener shuttingDownHandler;
+#endif
         private DataStoreItemEventHandler itemDeletedHandler;
 
         public bool IsSaving
@@ -94,13 +104,16 @@ namespace BL.Data
 
                 if (this.autoSave)
                 {
+#if SCRIPTSHARP
                     Window.AddEventListener("beforeunload", this.shuttingDownHandler, true);
-
+#endif
                     this.ConsiderAutoSave();
                 }
                 else
                 {
+#if SCRIPTSHARP
                     Window.RemoveEventListener("beforeunload", this.shuttingDownHandler);
+#endif
                 }
             }
         }
@@ -149,7 +162,10 @@ namespace BL.Data
             this.itemsById = new Dictionary<string, IItem>();
             this.itemsByLocalOnlyUniqueId = new Dictionary<string, IItem>();
             this.items = new List<IItem>();
+
+#if SCRIPTSHARP
             this.shuttingDownHandler = this.WindowShuttingDown;
+#endif
 
             this.itemDeletedHandler = this.item_ItemDeleted;
         }
@@ -351,7 +367,9 @@ namespace BL.Data
 
                 this.FireSaveStateChanged();
 
+#if SCRIPTSHARP
                 Window.SetTimeout(this.AutoSaveUpdate, 3000);
+#endif
             }
         }
 
@@ -365,6 +383,7 @@ namespace BL.Data
             }
         }
 
+#if SCRIPTSHARP
         private void WindowShuttingDown(ElementEvent e)
         {
             if (this.autoSavePending)
@@ -372,6 +391,7 @@ namespace BL.Data
                 this.AutoSaveUpdate();
             }
         }
+#endif
 
         private void AutoSaveUpdate()
         {
@@ -426,7 +446,7 @@ namespace BL.Data
 
             if (isNew)
             {
-                WebRequest wr = new WebRequest();
+                HttpRequest wr = new HttpRequest();
 
                 this.retrieveOperation.Tag = wr;
                 wr.Operation = this.retrieveOperation;
@@ -447,6 +467,7 @@ namespace BL.Data
                 return;
             }
 
+#if SCRIPTSHARP
             Script.Literal(@"
 var fieldarr = {1};
 for (var i=0; i<{0}.length; i++)
@@ -497,6 +518,9 @@ for (var i=0; i<{0}.length; i++)
 }}
                     
 ", results, this.entityType.Fields, this.entityType);
+#else
+            throw new NotImplementedException();
+#endif
 
             this.isRetrieved = true;
         }
@@ -531,10 +555,14 @@ for (var i=0; i<{0}.length; i++)
                 return;
             }
 
-            WebRequest wr = (WebRequest)o.Tag;
+            HttpRequest wr = (HttpRequest)o.Tag;
             object results = null;
 
+#if SCRIPTSHARP
             Script.Literal(@"{0}={1}.value", results, wr.ResponseJson);
+#else
+            throw new NotImplementedException();
+#endif
 
             this.SetFromData(results);
         }

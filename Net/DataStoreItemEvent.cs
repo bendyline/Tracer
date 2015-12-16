@@ -3,21 +3,15 @@
 
 using System;
 
-#if NET
-
 namespace Bendyline.Data
-#elif SCRIPTSHARP
-
-namespace BL.Data
-#endif
 {
     public delegate void DataStoreItemEventHandler(object sender, DataStoreItemEventArgs e);
 
     public class DataStoreItemEventArgs : EventArgs
     {
-        private IItem item;
+        private IDataStoreItem item;
 
-        public IItem Item
+        public IDataStoreItem Item
         {
             get
             {
@@ -30,7 +24,7 @@ namespace BL.Data
             }
         }
 
-        public DataStoreItemEventArgs(IItem item)
+        public DataStoreItemEventArgs(IDataStoreItem item)
         {
             this.item = item;
         }

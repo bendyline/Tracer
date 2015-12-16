@@ -2,11 +2,16 @@
     You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0. */
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
+
+#if NET
+using Bendyline.Base;
+
+namespace Bendyline.Data
+#elif SCRIPTSHARP
 using System.Runtime.CompilerServices;
 
 namespace BL.Data
+#endif
 {
     public enum ScaleType
     {

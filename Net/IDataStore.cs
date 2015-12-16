@@ -4,23 +4,15 @@
 using System;
 using System.Collections.Generic;
 
-
-#if NET
-using Bendyline.Base;
-
-namespace Bendyline.Data
-#elif SCRIPTSHARP
-
-namespace BL.Data
-#endif
+namespace Bendyline.Base
 {
     public interface IDataStore
     {
-        ICollection<IDataStoreType> Types { get; }
+        ICollection<IDataStoreList> Lists { get; }
         String Name { get; }
         String Location { get; set; }
         bool RequiresAuthentication { get; set; }
 
-        IDataStoreType Type(String listName);
+        IDataStoreList AssumeList(String listName);
     }
 }

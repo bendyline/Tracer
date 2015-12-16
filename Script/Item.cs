@@ -3,9 +3,16 @@
 
 using System;
 using System.Collections.Generic;
-using System.Serialization;
+
+#if NET
+using Bendyline.Base;
+using Bendyline.Base.ScriptCompatibility;
+
+namespace Bendyline.Data
+#elif SCRIPTSHARP
 
 namespace BL.Data
+#endif
 {
     public class Item : IItem
     {
@@ -69,14 +76,22 @@ namespace BL.Data
             {
                 object result = null;
 
+#if SCRIPTSHARP
                 Script.Literal("{0}={1}", result, this.data);
+#else
+                throw new NotImplementedException();
+#endif
 
                 return result;
             }
 
             set
             {
+#if SCRIPTSHARP
                 Script.Literal("{0}={1}", this.data, value);
+#else
+                throw new NotImplementedException();
+#endif
             }
         }
 

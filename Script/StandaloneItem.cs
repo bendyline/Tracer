@@ -3,7 +3,15 @@
 
 using System;
 
+
+#if NET
+using Bendyline.Base;
+
+namespace Bendyline.Data
+#elif SCRIPTSHARP
+
 namespace BL.Data
+#endif
 {
     public class StandaloneItem : Item
     {

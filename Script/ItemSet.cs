@@ -1,13 +1,20 @@
 ﻿/* Copyright (c) Bendyline LLC. All rights reserved. Licensed under the Apache License, Version 2.0.
     You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0. */
 
+
 using System;
 using System.Collections.Generic;
-using System.Linq;
+
+#if NET
+using Bendyline.Base;
+
+namespace Bendyline.Data
+#elif SCRIPTSHARP
+
 
 namespace BL.Data
+#endif
 {
-
     public enum ItemSetSort
     {
         DefaultState = 0,
@@ -160,8 +167,11 @@ namespace BL.Data
             {
                 object newValue = null;
 
+#if SCRIPTSHARP
                 Script.Literal("if ({1}[{2}] != null) {{{0}={1}[{2}];}}", newValue, data, field.Name);
-
+#else
+                throw new NotImplementedException();
+#endif
                 if (newValue != null)
                 {
                     item.SetValue(field.Name, newValue);

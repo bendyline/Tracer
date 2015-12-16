@@ -3,10 +3,15 @@
 
 using System;
 using System.Collections.Generic;
-using System.Net;
-using System.Serialization;
+
+#if NET
+using Bendyline.Base;
+
+namespace Bendyline.Data
+#elif SCRIPTSHARP
 
 namespace BL.Data
+#endif
 {
     public class StandaloneItemSet : IDataStoreItemSet
     {

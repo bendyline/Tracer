@@ -2,17 +2,25 @@
     You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0. */
 
 using System;
-using System.Collections.Generic;
 using System.Net;
+
+
+#if NET
+using Bendyline.Base;
+using System.Text;
+
+namespace Bendyline.Data
+#elif SCRIPTSHARP
 using System.Serialization;
 
 namespace BL.Data
+#endif
 {
     public class ODataEntity : Item
     {
         private string id;
         private bool disconnected = false;
-        private XmlHttpRequest saveRequest;
+        private HttpRequest saveRequest;
         private String activeSaveJson = null;
         private bool additionalSaveNeeded = false;
 
@@ -204,10 +212,8 @@ namespace BL.Data
         {
             String endpoint = ((ODataEntityType)this.Type).Url;
 
-            XmlHttpRequest xhr = new XmlHttpRequest();
-
-            WebRequest.SendWithCredentials(xhr);
-
+            HttpRequest xhr = new HttpRequest();
+            
             if (this.LocalStatus == ItemLocalStatus.Update || this.LocalStatus == ItemLocalStatus.Deleted)
             {
                 xhr.Open("PUT", endpoint + "(" + this.Id + "L)");
@@ -216,14 +222,15 @@ namespace BL.Data
             {
                 xhr.Open("POST", endpoint);
             }
-            xhr.SetRequestHeader("Accept", "application/json;odata=minimalmetadata");
-            xhr.SetRequestHeader("Content-Type", "application/json");
-//            xhr.SetRequestHeader("DataServiceVersion", "DataServiceVersion: 3.0;NetFx");
+
+            xhr.Initialize(HttpRequestType.JsonWrite);
+
+    //            xhr.SetRequestHeader("DataServiceVersion", "DataServiceVersion: 3.0;NetFx");
             xhr.OnReadyStateChange = new Action(this.HandleSaveComplete);
 
             this.saveRequest = xhr;
 
-            xhr.Send(this.activeSaveJson);
+            xhr.SendWithBody(this.activeSaveJson);
         }
 
         private void HandleSaveComplete()
@@ -238,6 +245,7 @@ namespace BL.Data
 
                     if (!String.IsNullOrEmpty(responseContent))
                     {
+#if SCRIPTSHARP
                         object results = Json.Parse(responseContent);
 
                         Script.Literal(@"
@@ -262,6 +270,10 @@ namespace BL.Data
                     this.setId(oc[""Id""]);
                 }}    
 ", results, this.Type.Fields, previousStatus);
+#else
+                        throw new NotImplementedException();
+#endif
+
                     }
                 }
 

@@ -65,6 +65,7 @@
     <Compile Include="FieldChoiceCollection.cs" />
     <Compile Include="FieldChoice.cs" />
     <Compile Include="FieldInterfaceType.cs" />
+    <Compile Include="Properties\AssemblyInfo.script.cs" />
     <Compile Include="StandaloneItem.cs" />
     <Compile Include="Item.cs" />
     <Compile Include="Native\OData.cs" />
@@ -103,7 +104,6 @@
     <Compile Include="IItem.cs" />
     <Compile Include="IDataStoreItemSet.cs" />
     <Compile Include="IDataStoreType.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Script.Web">

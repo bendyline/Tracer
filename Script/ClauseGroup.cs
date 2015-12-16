@@ -3,9 +3,16 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
+
+#if NET
+using Bendyline.Base;
+using System.Text;
+
+namespace Bendyline.Data
+#elif SCRIPTSHARP
 
 namespace BL.Data
+#endif
 {
     public enum GroupJoiner
     {
