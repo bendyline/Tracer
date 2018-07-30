@@ -1,7 +1,6 @@
 ﻿/* Copyright (c) Bendyline LLC. All rights reserved. Licensed under the Apache License, Version 2.0.
     You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0. */
 
-
 #if NET
 using Bendyline.Base;
 
@@ -29,6 +28,7 @@ namespace BL.Data
         Order = 13,
         Image = 14,
         MeUser = 15,
+        Url = 16,
         NoValue = 99
     }
 }
