@@ -9,6 +9,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>BL.Data</RootNamespace>
+    <DisableHandlePackageFileConflicts>true</DisableHandlePackageFileConflicts>
     <AssemblyName>bl.data</AssemblyName>
     <ScriptTemplate>Properties\Script.template</ScriptTemplate>
     <CodeAnalysisRuleSet>Properties\FxCop.ruleset</CodeAnalysisRuleSet>

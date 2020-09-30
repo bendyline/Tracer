@@ -23,6 +23,9 @@ namespace BL.Data
         ICollection<IItem> AllLocalItems{ get; }
         String Name { get; }
 
+        String Title { get; set;  }
+        String Description { get; set; }
+
         IDataStore Store { get; }
         IDataStoreField AssumeField(String name, FieldType fieldType);
         IDataStoreField GetField(String fieldName);

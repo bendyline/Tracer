@@ -21,6 +21,36 @@ namespace BL.Data
         private List<IItem> allItems;
         private String titleFieldId;
         private String keyFieldId;
+        private String description;
+        private string titleText;
+
+        public IDataStore store;
+
+        public String Title
+        {
+            get
+            {
+                return this.titleText;
+            }
+
+            set
+            {
+                this.titleText = value;
+            }
+        }
+
+        public String Description
+        {
+            get
+            {
+                return this.description;
+            }
+
+            set
+            {
+                this.description = value;
+            }
+        }
 
         public String TitleFieldId
         {
@@ -47,9 +77,6 @@ namespace BL.Data
                 this.keyFieldId = value;
             }
         }
-
-
-        public IDataStore store;
 
         public IDataStore Store
         {

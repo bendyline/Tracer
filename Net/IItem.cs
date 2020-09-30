@@ -3,7 +3,7 @@
 
 using System;
 
-namespace Bendyline.Base
+namespace Bendyline.Data
 {
     public interface IDataStoreItem
     {

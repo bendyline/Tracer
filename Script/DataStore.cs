@@ -46,6 +46,14 @@ namespace BL.Data
             return store;
         }
 
+        public bool IsProvisioned
+        {
+            get
+            {
+                return true;
+            }
+        }
+
         public static IDataStore CreateByTypeName(String typeName)
         {
             throw new Exception(String.Format("Specified type '{0}' is not of the appropriate type.", typeName));
@@ -101,6 +109,11 @@ namespace BL.Data
         {
             this.lists = new List<IDataStoreType>();
             this.listsByName = new Dictionary<string, IDataStoreType>();
+        }
+
+        public void EnsureProvisioned(AsyncCallback callback, object state)
+        {
+            CallbackResult.NotifySynchronousSuccess(callback, state, this);
         }
 
         public IDataStoreType Type(String listName)

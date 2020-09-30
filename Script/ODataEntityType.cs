@@ -29,6 +29,34 @@ namespace BL.Data
         private String titleFieldId;
 
         private Query validCriteria;
+        private String titieText;
+        private String description;
+
+        public String Title
+        {
+            get
+            {
+                return this.titieText;
+            }
+
+            set
+            {
+                this.titieText = value;
+            }
+        }
+
+        public String Description
+        {
+            get
+            {
+                return this.description;
+            }
+
+            set
+            {
+                this.description = value;
+            }
+        }
 
         public String TitleFieldId
         {

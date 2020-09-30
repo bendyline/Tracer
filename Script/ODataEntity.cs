@@ -216,21 +216,24 @@ namespace BL.Data
             
             if (this.LocalStatus == ItemLocalStatus.Update || this.LocalStatus == ItemLocalStatus.Deleted)
             {
-                xhr.Open("PUT", endpoint + "(" + this.Id + "L)");
+                xhr.Verb = "PUT";
+                xhr.Url = endpoint + "(" + this.Id + "L)";
             }
             else
             {
-                xhr.Open("POST", endpoint);
+                xhr.Verb = "POST";
+                xhr.Url = endpoint;
             }
 
-            xhr.Initialize(HttpRequestType.JsonWrite);
+            xhr.RequestType = HttpRequestType.JsonWrite;
 
     //            xhr.SetRequestHeader("DataServiceVersion", "DataServiceVersion: 3.0;NetFx");
             xhr.OnReadyStateChange = new Action(this.HandleSaveComplete);
 
             this.saveRequest = xhr;
+            xhr.Body = this.activeSaveJson;
 
-            xhr.SendWithBody(this.activeSaveJson);
+            xhr.Send();
         }
 
         private void HandleSaveComplete()

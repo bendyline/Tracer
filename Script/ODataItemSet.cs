@@ -451,10 +451,11 @@ namespace BL.Data
                 this.retrieveOperation.Tag = wr;
                 wr.Operation = this.retrieveOperation;
                 wr.AuthenticationRequired = true;
-                wr.CompletionData = this;
+                wr.Source = this;
                 wr.OnComplete = new Action(this.EndRetrieve);
 
-                wr.InitializeAsJsonReadRequest(endpoint);
+                wr.Url = endpoint;
+                wr.RequestType = HttpRequestType.JsonRead;
 
                 wr.Send();
             }

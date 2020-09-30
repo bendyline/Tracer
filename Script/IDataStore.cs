@@ -10,7 +10,6 @@ using Bendyline.Base;
 
 namespace Bendyline.Data
 #elif SCRIPTSHARP
-
 namespace BL.Data
 #endif
 {
@@ -21,6 +20,10 @@ namespace BL.Data
         String Location { get; set; }
         bool RequiresAuthentication { get; set; }
 
+        bool IsProvisioned { get; }
+
         IDataStoreType Type(String listName);
+
+        void EnsureProvisioned(AsyncCallback callback, object state);
     }
 }

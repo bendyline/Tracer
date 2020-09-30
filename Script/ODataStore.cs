@@ -24,12 +24,21 @@ namespace BL.Data
         private Int32 newItemsCreated;
         private String serviceUrl;
         private String storeNamespace;
+
         public ICollection<IDataStoreType> Types 
         {
             get
             {
                 return this.entityTypes;
             }        
+        }
+
+        public bool IsProvisioned
+        {
+            get
+            {
+                return true;
+            }
         }
 
         public String Name 
@@ -111,6 +120,11 @@ namespace BL.Data
         {
             this.entityTypes = new List<IDataStoreType>();
             this.entitiesTypesByName = new Dictionary<string, ODataEntityType>();
+        }
+
+        public void EnsureProvisioned(AsyncCallback callback, object state)
+        {
+            CallbackResult.NotifySynchronousSuccess(callback, state, this);
         }
 
         public IDataStoreType Type(String typeName)
