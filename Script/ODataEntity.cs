@@ -225,7 +225,7 @@ namespace BL.Data
                 xhr.Url = endpoint;
             }
 
-            xhr.RequestType = HttpRequestType.JsonWrite;
+            xhr.RequestType = HttpRequestType.ODataV2JsonWrite;
 
     //            xhr.SetRequestHeader("DataServiceVersion", "DataServiceVersion: 3.0;NetFx");
             xhr.OnReadyStateChange = new Action(this.HandleSaveComplete);

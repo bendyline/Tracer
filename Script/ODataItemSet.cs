@@ -455,7 +455,7 @@ namespace BL.Data
                 wr.OnComplete = new Action(this.EndRetrieve);
 
                 wr.Url = endpoint;
-                wr.RequestType = HttpRequestType.JsonRead;
+                wr.RequestType = HttpRequestType.ODataV2JsonRead;
 
                 wr.Send();
             }
