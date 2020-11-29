@@ -12,7 +12,7 @@ namespace Bendyline.Data
 namespace BL.Data
 #endif
 {
-    public class FieldChoice : SerializableObject
+    public class FieldChoice : SerializableObject, IFieldChoice
     {
         private String displayName;
         private object id;

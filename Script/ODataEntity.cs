@@ -19,13 +19,12 @@ namespace BL.Data
     public class ODataEntity : Item
     {
         private string id;
-        private bool disconnected = false;
         private HttpRequest saveRequest;
         private String activeSaveJson = null;
         private bool additionalSaveNeeded = false;
+        public virtual event EventHandler Saving;
+        public virtual event EventHandler Saved;
 
-        public event EventHandler Saving;
-        public event EventHandler Saved;
         private Operation saveOperation;
 
         public bool IsSaving
@@ -36,18 +35,6 @@ namespace BL.Data
             }
         }
 
-        public bool Disconnected
-        {
-            get
-            {
-                return this.disconnected;
-            }
-
-            set
-            {
-                this.disconnected = value;
-            }
-        }
 
         public Operation SaveOperation
         {
@@ -157,7 +144,7 @@ namespace BL.Data
 
         public void Save(AsyncCallback callback, object state)
         {
-            if (this.disconnected)
+            if (this.Disconnected)
             {
                 throw new Exception("Cannot save a disconnected item.");
             }

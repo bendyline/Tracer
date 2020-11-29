@@ -68,6 +68,11 @@ namespace BL.Data
             {
                 throw new Exception("Not implemented");
             }
+
+            set
+            {
+                throw new Exception("Not implemented");
+            }
         }
 
         public IDataStoreType Type
@@ -88,7 +93,7 @@ namespace BL.Data
         }
         public List<IItem> GetSortedItems(ItemSetSort sort, String fieldName)
         {
-            return ItemSet.GetSortedItemList(this.Items, sort, fieldName);
+            return ItemSetBase.GetSortedItemList(this.Items, sort, fieldName);
         }
 
         public IItem Create()
@@ -172,6 +177,10 @@ namespace BL.Data
                 }
             }
         }
+        public void SetFromData(object results)
+        {
+            throw new Exception(String.Empty);
+        }
 
         public IItem GetItemByLocalOnlyUniqueId(String id)
         {
@@ -183,7 +192,7 @@ namespace BL.Data
             return this.itemsById[id];
         }
 
-        public void BeginRetrieve(AsyncCallback callback, object state)
+        public void Retrieve(AsyncCallback callback, object state)
         {
             CallbackResult.NotifySynchronousSuccess(callback, state, this);
         }

@@ -194,16 +194,8 @@ namespace BL.Data
             item.Disconnected = true;
             item.SetCreatedDateTime(Date.Now);
             item.SetModifiedDateTime(item.CreatedDateTime);
-;
-            return item;
-        }
 
-        public void Save()
-        {
-            foreach (ODataEntity ode in this.allItemsSet.Items)
-            {
-                ode.Save(null, null);
-            }
+            return item;
         }
 
         public IDataStoreItemSet EnsureAllItemsSet()
@@ -269,7 +261,7 @@ namespace BL.Data
             }
         }
 
-        public void MoveItemSetToNewQuery(ODataItemSet odis, Query newQuery)
+        public void MoveItemSetToNewQuery(IDataStoreItemSet odis, Query newQuery)
         {
             String oldQueryString = odis.Query.ToString().ToLowerCase();
 
@@ -279,7 +271,7 @@ namespace BL.Data
 
             String newQueryString = newQuery.ToString().ToLowerCase();
 
-            this.itemsByQuery[newQueryString] = odis;
+            this.itemsByQuery[newQueryString] = (ODataItemSet)odis;
         }
 
         public IDataStoreItemSet EnsureItemSet(Query query)
@@ -305,10 +297,12 @@ namespace BL.Data
             dataSet.SetFromData(data);
         }
 
-        public void BeginUpdate(AsyncCallback callback, object asyncState)
+        public void Save(AsyncCallback callback, object asyncState)
         {
-            ;
+            foreach (ODataEntity ode in this.allItemsSet.Items)
+            {
+                ode.Save(null, null);
+            }
         }
-
     }
 }

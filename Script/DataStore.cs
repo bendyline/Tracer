@@ -118,8 +118,17 @@ namespace BL.Data
 
         public IDataStoreType Type(String listName)
         {
-            return null;
-        }
+            if (this.listsByName.ContainsKey(listName))
+            {
+                return this.listsByName[listName];
+            }
 
+            ItemType it = new ItemType();
+            it.Name = listName;
+            this.listsByName[listName] = it;
+            this.lists.Add(it);
+
+            return it;
+        }
     }
 }

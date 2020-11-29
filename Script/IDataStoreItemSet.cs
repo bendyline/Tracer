@@ -13,6 +13,13 @@ namespace Bendyline.Data
 namespace BL.Data
 #endif
 {
+    public enum ItemSetRole
+    {
+        Query = 0,
+        AllItems = 1,
+        AllLocalItems =2
+    }
+
     public interface IDataStoreItemSet
     {
         IItem FirstItem
@@ -44,6 +51,7 @@ namespace BL.Data
         Query Query
         {
             get;
+            set;
         }
 
         event DataStoreItemSetEventHandler ItemSetChanged;
@@ -56,9 +64,11 @@ namespace BL.Data
         IItem GetItemById(String id);
         IItem GetItemByLocalOnlyUniqueId(String id);
 
-        void BeginRetrieve(AsyncCallback callback, object state);
+        void Retrieve(AsyncCallback callback, object state);
 
         void Add(IItem item);
+
+        void SetFromData(object results);
 
         void Remove(IItem item);
 

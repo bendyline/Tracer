@@ -60,12 +60,18 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="DataStoreItemChangedEvent.cs" />
+    <Compile Include="DataStoreObjectManager.cs" />
     <Compile Include="FieldInterfaceTypeOptions.cs" />
+    <Compile Include="FieldChoiceCollectionBase.cs" />
+    <Compile Include="FieldCollectionBase.cs" />
+    <Compile Include="IDataStoreConsumer.cs" />
+    <Compile Include="IFieldChoice.cs" />
     <Compile Include="LessThanClause.cs" />
     <Compile Include="GreaterThanClause.cs" />
     <Compile Include="FieldChoiceCollection.cs" />
     <Compile Include="FieldChoice.cs" />
     <Compile Include="FieldInterfaceType.cs" />
+    <Compile Include="ItemSet.cs" />
     <Compile Include="Properties\AssemblyInfo.script.cs" />
     <Compile Include="StandaloneItem.cs" />
     <Compile Include="Item.cs" />
@@ -94,7 +100,7 @@
     <Compile Include="EqualsClause.cs" />
     <Compile Include="FieldType.cs" />
     <Compile Include="DataStoreItemEvent.cs" />
-    <Compile Include="ItemSet.cs" />
+    <Compile Include="ItemSetBase.cs" />
     <Compile Include="DataStoreItemSetEvent.cs" />
     <Compile Include="ItemType.cs" />
     <Compile Include="ListFileSyncManager.cs" />

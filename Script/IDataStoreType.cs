@@ -20,10 +20,10 @@ namespace BL.Data
         String TitleFieldId { get; }
 
         ICollection<IDataStoreField> Fields { get; }
-        ICollection<IItem> AllLocalItems{ get; }
+        ICollection<IItem> AllLocalItems { get; }
         String Name { get; }
 
-        String Title { get; set;  }
+        String Title { get; set; }
         String Description { get; set; }
 
         IDataStore Store { get; }
@@ -31,10 +31,13 @@ namespace BL.Data
         IDataStoreField GetField(String fieldName);
 
         IItem CreateItem();
+        IItem CreateDisconnectedItem();
 
         IDataStoreItemSet EnsureAllItemsSet();
         IDataStoreItemSet EnsureItemSet(Query query);
-       
-        void BeginUpdate(AsyncCallback callback, object asyncState);
+
+        void Save(AsyncCallback callback, object asyncState);
+        void MoveItemSetToNewQuery(IDataStoreItemSet odis, Query newQuery);
+        void SetDataForQuery(Query query, object data);
     }
 }

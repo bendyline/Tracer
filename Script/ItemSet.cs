@@ -1,46 +1,73 @@
-﻿/* Copyright (c) Bendyline LLC. All rights reserved. Licensed under the Apache License, Version 2.0.
+/* Copyright (c) Bendyline LLC. All rights reserved. Licensed under the Apache License, Version 2.0.
     You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0. */
-
 
 using System;
 using System.Collections.Generic;
+using System.Net;
+using System.Diagnostics;
 
 #if NET
 using Bendyline.Base;
+using Bendyline.Base.ScriptCompatibility;
+using System.Text;
 
 namespace Bendyline.Data
 #elif SCRIPTSHARP
-
+using System.Html;
 
 namespace BL.Data
 #endif
 {
-    public enum ItemSetSort
+    public class ItemSet : IDataStoreItemSet
     {
-        DefaultState = 0,
-        ModifiedDateAscending = 1,
-        ModifiedDateDescending = 2,
-        CreatedDateAscending = 3,
-        CreatedDateDescending = 4,
-        FieldAscending = 5,
-        FieldDescending = 6,
-        None = 99
-    }
+        private List<IItem> items;
+        private Dictionary<String, IItem> itemsById;
+        private Dictionary<String, IItem> itemsByLocalOnlyUniqueId;
 
-    public abstract class ItemSet : IDataStoreItemSet
-    {
-        private IDataStoreType list;
+        private ODataEntityType entityType;
         private Query query;
+
+        private Operation retrieveOperation;
+        private bool isRetrieved = false;
+        private bool autoSave = false;
+        private bool autoSavePending = false;
 
         public event DataStoreItemSetEventHandler ItemSetChanged;
         public event DataStoreItemChangedEventHandler ItemInSetChanged;
+
         public event DataStoreItemSetEventHandler SaveStateChanged;
+
+#if SCRIPTSHARP
+        private ElementEventListener shuttingDownHandler;
+#endif
+        private DataStoreItemEventHandler itemDeletedHandler;
 
         public bool IsSaving
         {
             get
             {
-                return this.IsSaving;
+                foreach (ODataEntity ode in this.items)
+                {
+                    if (ode.IsSaving)
+                    {
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+        }
+
+        public bool IsRetrieved
+        {
+            get
+            {
+                return this.isRetrieved;
+            }
+
+            set
+            {
+                this.isRetrieved = value;
             }
         }
 
@@ -48,17 +75,34 @@ namespace BL.Data
         {
             get
             {
+                foreach (ODataEntity ode in this.items)
+                {
+                    if (ode.LocalStatus == ItemLocalStatus.NewItem || ode.LocalStatus == ItemLocalStatus.Update)
+                    {
+                        return true;
+                    }
+                }
+
                 return false;
             }
         }
+
+
         public IItem FirstItem
         {
             get
             {
-                return this.Items[0];
+                return this.items[0];
             }
         }
-        public abstract List<IItem> Items { get; }
+
+        public List<IItem> Items 
+        { 
+            get
+            {
+                return items;
+            }
+        }
 
         public Query Query
         {
@@ -66,124 +110,50 @@ namespace BL.Data
             {
                 return this.query;
             }
+
+            set
+            {
+                this.query = value;
+            }
         }
 
         public IDataStoreType Type
         {
             get
             {
-                return this.list;
+                return this.entityType;
             }
         }
 
         public ItemSet(IDataStoreType list, Query query)
         {
-            this.list = list;
+            this.entityType = (ODataEntityType)list;
             this.query = query;
+            this.itemsById = new Dictionary<string, IItem>();
+            this.itemsByLocalOnlyUniqueId = new Dictionary<string, IItem>();
+            this.items = new List<IItem>();
+
+            this.itemDeletedHandler = this.item_ItemDeleted;
         }
-       
-        public List<IItem> GetSortedItems(ItemSetSort sort, String fieldName)
+
+        public IItem Create()
         {
-            return GetSortedItemList(this.Items, sort, fieldName);
+            ODataEntity item = new ODataEntity(this.entityType);
+          
+            ODataStore store = (ODataStore)this.Type.Store;
+
+            store.NewItemsCreated++;
+
+            item.SetId((-store.NewItemsCreated).ToString());
+
+            item.SetLocalStatus(ItemLocalStatus.NewItem);
+            item.SetCreatedDateTime(Date.Now);
+            item.SetModifiedDateTime(item.CreatedDateTime);
+
+            this.Add(item);
+
+            return item;
         }
-
-        public static List<IItem> GetSortedItemList(List<IItem> source, ItemSetSort sort, String sortField)
-        {
-            List<IItem> items = new List<IItem>();
-
-            if (sort == ItemSetSort.FieldAscending || sort == ItemSetSort.FieldDescending)
-            {
-                foreach (IItem itemToPlace in source)
-                {
-                    bool addedItem = false;
-
-                    int index = 0;
-
-                    foreach (IItem placedItem in items)
-                    {
-                        if (itemToPlace.CompareTo(placedItem, sort, sortField) <= 0)
-                        {
-                            items.Insert(index, itemToPlace);
-                            addedItem = true;
-                            break;
-                        }
-
-                        index++;
-                    }
-
-                    if (!addedItem)
-                    {
-                        items.Add(itemToPlace);
-                    }
-                }
-
-                return items;
-            }
-
-            foreach (IItem item in source)
-            {
-                items.Add(item);
-            }
-
-            if (sort == ItemSetSort.ModifiedDateAscending)
-            {
-                items.Sort(Item.CompareItemsByModifiedDateAscending);
-            }
-            else if (sort == ItemSetSort.ModifiedDateDescending)
-            {
-                items.Sort(Item.CompareItemsByModifiedDateDescending);
-            }            
-            else if (sort == ItemSetSort.CreatedDateAscending)
-            {
-                items.Sort(Item.CompareItemsByCreatedDateAscending);
-            }
-            else if (sort == ItemSetSort.CreatedDateDescending)
-            {
-                items.Sort(Item.CompareItemsByCreatedDateDescending);
-            }
-
-            return items;
-        }
-
-        public static object GetDataObject(IDataStoreItemSet itemSet, IItem item)
-        {
-            Dictionary<String, object> newObject = new Dictionary<string, object>();
-
-            foreach (IDataStoreField field in itemSet.Type.Fields)
-            {
-                object val = item.GetValue(field.Name);
-
-                newObject[field.Name] = val;
-            }
-
-            newObject["LocalOnlyUniqueId"] = item.LocalOnlyUniqueId;
-
-            return newObject;
-        }
-
-        public static void SetDataObject(IDataStoreItemSet itemSet, IItem item, object data)
-        {
-            foreach (IDataStoreField field in itemSet.Type.Fields)
-            {
-                object newValue = null;
-
-#if SCRIPTSHARP
-                Script.Literal("if ({1}[{2}] != null) {{{0}={1}[{2}];}}", newValue, data, field.Name);
-#else
-                throw new NotImplementedException();
-#endif
-                if (newValue != null)
-                {
-                    item.SetValue(field.Name, newValue);
-                }
-            }
-        }
-
-
-        public abstract IItem GetItemById(String id);
-        public abstract IItem GetItemByLocalOnlyUniqueId(String id);
-        public abstract void BeginRetrieve(AsyncCallback callback, object state);
-        public abstract ICollection<IItem> EndRetrieve(IAsyncResult result);
 
         public void Clear()
         {
@@ -200,30 +170,176 @@ namespace BL.Data
             }
         }
 
+        public List<IItem> GetSortedItems(ItemSetSort sort, String fieldName)
+        {
+            return ItemSetBase.GetSortedItemList(this.Items, sort, fieldName);
+        }
+
+        public IItem GetItemById(String id)
+        {
+            return this.itemsById[id];
+        }
+
+        public IItem GetItemByLocalOnlyUniqueId(String id)
+        {
+            return this.itemsByLocalOnlyUniqueId[id];
+        }
+
+        private void AddManagersToItem(IItem item)
+        {
+            item.ItemDeleted += this.itemDeletedHandler;
+        }
+
+        private void RemoveManagersFromItem(IItem item)
+        {
+            item.ItemDeleted -= this.itemDeletedHandler;
+        }
+
+        private void item_ItemDeleted(object sender, DataStoreItemEventArgs e)
+        {
+            if (!this.Items.Contains(e.Item))
+            {
+                return;
+            }
+
+            if (this.autoSave)
+            {
+                ((ODataEntity)e.Item).Save(null, null);
+            }
+
+            this.Remove(e.Item);
+        }
+
+
+        public virtual void Add(IItem item)
+        {
+            IItem existingItem = this.itemsById[item.Id];
+
+            if (existingItem != null && existingItem != item)
+            {
+                throw new Exception("Adding two items representing the same ID.");
+            }
+
+            if (existingItem != null && existingItem == item)
+            {
+                return;
+            }
+
+            this.itemsByLocalOnlyUniqueId[item.LocalOnlyUniqueId] = item;
+            this.itemsById[item.Id] = item;
+            this.Items.Add(item);
+
+            this.AddManagersToItem(item);
+
+            item.ItemChanged += item_ItemChanged;
+
+            if (this.ItemSetChanged != null)
+            {
+                DataStoreItemSetEventArgs dsiea = new DataStoreItemSetEventArgs(this);
+
+                dsiea.AddedItems.Add(item);
+
+                this.ItemSetChanged(this, dsiea);
+            }
+        }
+
+        private void item_ItemChanged(object sender, DataStoreItemChangedEventArgs e)
+        {
+            if (this.ItemInSetChanged != null)
+            {
+                this.ItemInSetChanged(this, e);
+            }
+        }
+        public void Retrieve(AsyncCallback callback, object state)
+        {
+            CallbackResult.NotifySynchronousSuccess(callback, state, null);
+        }
+
+        public void InvalidateRetrieval()
+        {
+            this.isRetrieved = false;
+        }
+        public void SetFromData(object results)
+        {
+            if (results == null)
+            {
+                return;
+            }
+
+            Debug.Fail("Not implemented");
+#if SCRIPTSHARP
+            Script.Literal(@"
+var fieldarr = {1};
+for (var i=0; i<{0}.length; i++)
+{{
+    var oc = {0}[i];
+
+    if (oc != null)
+    {{
+        var idVal = oc[""Id""];
+
+
+        var newe = null;
+
+        if (idVal == null) 
+        {{
+            newe = new BL.Data.ODataEntity({2});
+        }}
+        else
+        {{
+            newe = {2}.ensureItem(idVal);
+        }}
+
+        for (var j=0; j<fieldarr.length; j++)
+        {{
+            var fi = fieldarr[j];
+            var fiName = fi.get_name();
+            var fiNameL = fiName.toLowerCase();
+
+            var val = oc[fi.get_name()];
+
+            if (val != null)
+            {{
+                newe.localSetValue(fiName, val);
+            }}
+
+            if (fiNameL == ""createddate"")
+            {{
+                newe.setCreatedDateTime(newe.getValue(fiName));
+            }}
+            else if (fiNameL == ""modifieddate"")
+            {{
+                newe.setModifiedDateTime(newe.getValue(fiName));
+            }}
+        }}
+        newe.setLocalStatus(2);
+        this.add(newe);
+    }}
+}}
+                    
+", results, this.entityType.Fields, this.entityType);
+#else
+            throw new NotImplementedException();
+#endif
+
+            this.isRetrieved = true;
+        }
+
         public void Remove(IItem item)
         {
             if (this.Items.Contains(item))
             {
+                this.RemoveManagersFromItem(item);
+
+                this.itemsByLocalOnlyUniqueId.Remove(item.LocalOnlyUniqueId);
+                this.itemsById.Remove(item.Id);
                 this.Items.Remove(item);
 
                 if (this.ItemSetChanged != null)
                 {
-                    DataStoreItemSetEventArgs dsiea = DataStoreItemSetEventArgs.ItemRemoved(this, item);
+                    DataStoreItemSetEventArgs dsiea = new DataStoreItemSetEventArgs(this);
 
-                    this.ItemSetChanged(this, dsiea);
-                }
-            }
-        }
-
-        public virtual void Add(IItem item)
-        {
-            if (!this.Items.Contains(item))
-            {
-                this.Items.Add(item);
-
-                if (this.ItemSetChanged != null)
-                {
-                    DataStoreItemSetEventArgs dsiea = DataStoreItemSetEventArgs.ItemAdded(this, item);
+                    dsiea.RemovedItems.Add(item);
 
                     this.ItemSetChanged(this, dsiea);
                 }

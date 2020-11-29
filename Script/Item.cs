@@ -20,15 +20,32 @@ namespace BL.Data
         private ItemLocalStatus localStatus = ItemLocalStatus.Unchanged;
         private String localOnlyUniqueId;
         private StandardStatus status = StandardStatus.Normal;
+        private bool disconnected = false;
 
         private Date createdDateTime;
         private Date modifiedDateTime;
         private String modifiedUserId;
         private String createdUserId;
-        
+
+        public event EventHandler Saving;
+        public event EventHandler Saved;
+
+
         public event DataStoreItemChangedEventHandler ItemChanged;
         public event DataStoreItemEventHandler ItemDeleted;
 
+        public bool Disconnected
+        {
+            get
+            {
+                return this.disconnected;
+            }
+
+            set
+            {
+                this.disconnected = value;
+            }
+        }
         public Date CreatedDateTime 
         { 
             get
@@ -203,6 +220,13 @@ namespace BL.Data
             return CompareItems(this, item, sort, fieldName);
         }
 
+        public virtual void Save(AsyncCallback callback, object state)
+        {
+            ;
+        }
+
+
+
         public static int CompareItems(IItem itemA, IItem itemB, ItemSetSort sort, String fieldName)
         {
             if (sort == ItemSetSort.DefaultState)
@@ -240,7 +264,7 @@ namespace BL.Data
 
         public static object GetDataObject(IDataStoreItemSet itemSet, IItem item)
         {
-            return ItemSet.GetDataObject(itemSet, item);
+            return ItemSetBase.GetDataObject(itemSet, item);
         }
 
         public static int CompareItemsByFieldDescending(IItem itemA, IItem itemB, String fieldName)
@@ -426,7 +450,7 @@ namespace BL.Data
 
         public static void SetDataObject(IDataStoreItemSet itemSet, IItem item, object data)
         {
-            ItemSet.SetDataObject(itemSet, item, data);
+            ItemSetBase.SetDataObject(itemSet, item, data);
         }
 
         public void SetData(object data)

@@ -206,7 +206,7 @@ namespace BL.Data
 
         public List<IItem> GetSortedItems(ItemSetSort sort, String fieldName)
         {
-            return ItemSet.GetSortedItemList(this.Items, sort, fieldName);
+            return ItemSetBase.GetSortedItemList(this.Items, sort, fieldName);
         }
 
         public IItem GetItemById(String id)
@@ -421,7 +421,7 @@ namespace BL.Data
             this.isRetrieved = false;
         }
 
-        public void BeginRetrieve(AsyncCallback callback, object state)
+        public void Retrieve(AsyncCallback callback, object state)
         {
             if (this.isRetrieved)
             {

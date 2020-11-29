@@ -13,11 +13,14 @@ namespace Bendyline.Data
 namespace BL.Data
 #endif
 {
-    public class FieldChoiceCollection : ISerializableCollection, IEnumerable
+    public class FieldChoiceCollection : FieldChoiceCollectionBase
     {
         private ArrayList choices;
 
-        public ArrayList Choices
+        public override event NotifyCollectionChangedEventHandler CollectionChanged;
+
+
+        public IEnumerable Choices
         {
             get
             {
@@ -25,7 +28,23 @@ namespace BL.Data
             }
         }
 
-        public IEnumerator GetEnumerator()
+        public override int Count
+        {
+            get
+            {
+                return this.choices.Count;
+            }
+        }
+
+        public override object this[int index] 
+        { 
+            get
+            {
+                return this.choices[index];
+            }
+        }
+
+        public override IEnumerator GetEnumerator()
         {
             return this.choices.GetEnumerator();
         }
@@ -36,21 +55,45 @@ namespace BL.Data
         }
 
 
-        public void Clear()
+        public override void Clear()
         {
             this.choices.Clear();
         }
 
-        public SerializableObject Create()
+        public override SerializableObject Create()
         {
             FieldChoice choice = new FieldChoice();
+
+            choice.PropertyChanged += choice_PropertyChanged;
 
             return choice;
         }
 
-        public void Add(SerializableObject choice)
+        private void choice_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (this.CollectionChanged != null)
+            {
+                this.CollectionChanged(this, NotifyCollectionChangedEventArgs.ItemStateChange(sender, e.PropertyName));
+            }
+        }
+
+        public override void Add(SerializableObject choice)
         {
             this.choices.Add(choice);
+
+            if (this.CollectionChanged != null)
+            {
+                this.CollectionChanged(this, NotifyCollectionChangedEventArgs.ItemAdded(choice));
+            }
+        }
+        public override void Remove(SerializableObject choice)
+        {
+            this.choices.Remove(choice);
+
+            if (this.CollectionChanged != null)
+            {
+                this.CollectionChanged(this, NotifyCollectionChangedEventArgs.ItemRemoved(choice));
+            }
         }
     }
 }

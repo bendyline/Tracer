@@ -145,7 +145,7 @@ namespace BL.Data
         {
             foreach (ODataEntityType e in this.entityTypes)
             {
-                e.Save();
+                e.Save(null, null);
             }
         }
     }

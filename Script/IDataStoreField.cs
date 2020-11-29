@@ -21,9 +21,12 @@ namespace BL.Data
 
         bool AllowNull{ get; }
 
-        FieldChoiceCollection Choices { get;  }
-        String DisplayName { get; }
+        FieldChoiceCollectionBase Choices { get;  }
+
+        String Title { get; }
+
         String Name { get; }
+
         FieldType Type { get; }
         FieldInterfaceType InterfaceType { get; }
         FieldInterfaceTypeOptions InterfaceTypeOptions { get; set;  }

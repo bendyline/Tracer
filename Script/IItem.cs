@@ -58,6 +58,8 @@ namespace BL.Data
         Date GetDateValue(String name);
         void SetDateValue(String name, Date value);
 
+        void Save(AsyncCallback callback, object state);
+
         int CompareTo(IItem item, ItemSetSort sort, String fieldName);
     }
 }

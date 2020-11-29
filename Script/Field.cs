@@ -81,7 +81,7 @@ namespace BL.Data
             }
         }
 
-        public FieldChoiceCollection Choices
+        public FieldChoiceCollectionBase Choices
         {
             get
             {
@@ -95,7 +95,7 @@ namespace BL.Data
             }
         }
 
-        public String DisplayName
+        public String Title
         {
             get
             {

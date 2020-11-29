@@ -19,6 +19,8 @@ namespace BL.Data
         private List<IDataStoreField> fields;
         private Dictionary<String, IDataStoreField> fieldsByName;
         private List<IItem> allItems;
+        private Dictionary<String, ItemSet> itemsByQuery;
+        private ItemSet allItemsSet;
         private String titleFieldId;
         private String keyFieldId;
         private String description;
@@ -125,6 +127,7 @@ namespace BL.Data
             this.fields = new List<IDataStoreField>();
             this.fieldsByName = new Dictionary<string, IDataStoreField>();
             this.allItems = new List<IItem>();
+            this.itemsByQuery = new Dictionary<string, ItemSet>();
         }
 
         public IDataStoreField GetField(String name)
@@ -154,20 +157,72 @@ namespace BL.Data
 
         public IItem CreateItem()
         {
-            return null;
+            ItemSet itemSet = (ItemSet)this.EnsureAllItemsSet();
+
+            return itemSet.Create();
+        }
+
+        public IItem CreateDisconnectedItem()
+        {
+            Item item = new Item(this);
+
+            item.Disconnected = true;
+            item.SetCreatedDateTime(Date.Now);
+            item.SetModifiedDateTime(item.CreatedDateTime);
+
+            return item;
+        }
+
+        public void MoveItemSetToNewQuery(IDataStoreItemSet odis, Query newQuery)
+        {
+            throw new Exception(String.Empty);
+        }
+
+        public void SetDataForQuery(Query query, object data)
+        {
+            throw new Exception(String.Empty);
         }
 
         public IDataStoreItemSet EnsureAllItemsSet()
         {
-            return null;
+            if (this.allItemsSet != null)
+            {
+                return this.allItemsSet;
+            }
+
+            String queryString = "";
+
+            ItemSet odis = this.itemsByQuery[queryString];
+
+            if (odis == null)
+            {
+                odis = new ItemSet(this, Query.All);
+
+                this.itemsByQuery[queryString] = odis;
+            }
+
+            this.allItemsSet = odis;
+
+            return odis;
         }
 
         public IDataStoreItemSet EnsureItemSet(Query query)
         {
-            return null;
+            String queryString = query.ToString().ToLowerCase();
+
+            ItemSet odis = this.itemsByQuery[queryString];
+
+            if (odis == null)
+            {
+                odis = new ItemSet(this, query);
+
+                this.itemsByQuery[queryString] = odis;
+            }
+
+            return odis;
         }
 
-        public void BeginUpdate(AsyncCallback callback, object asyncState)
+        public void Save(AsyncCallback callback, object asyncState)
         {
 
         }
